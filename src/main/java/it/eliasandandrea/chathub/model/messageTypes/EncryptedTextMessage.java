@@ -5,11 +5,11 @@ import it.eliasandandrea.chathub.model.RSACipher;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 
-public class TextMessage implements Message{
+public class EncryptedTextMessage implements Message{
 
     private String message;
 
-    public TextMessage(String message) {
+    public EncryptedTextMessage(String message) {
         this.message = message;
     }
 
