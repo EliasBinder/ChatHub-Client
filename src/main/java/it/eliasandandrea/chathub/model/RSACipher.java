@@ -26,7 +26,7 @@ public class RSACipher {
 
     public RSACipher(String password) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         this.password = password;
-
+//TODO: write to file
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
         KeyPair pair = generator.generateKeyPair();

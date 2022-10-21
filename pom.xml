@@ -112,7 +112,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>it.eliasandandrea.chathub/it.eliasandandrea.chathub.HelloApplication</mainClass>
+                            <mainClass>it.eliasandandrea.chathub/it.eliasandandrea.chathub.ChatHubApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
