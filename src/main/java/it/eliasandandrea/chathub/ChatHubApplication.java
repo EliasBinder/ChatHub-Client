@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ChatHubApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(new ServerList(), 800, 600);
+        Scene scene = new Scene(new ServerList(), 800, 450);
         stage.setTitle("ChatHub");
         stage.setScene(scene);
         stage.show();
