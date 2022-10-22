@@ -24,17 +24,10 @@ public class ZeroconfServiceListener implements ServiceListener {
 
     @Override
     public void serviceRemoved(ServiceEvent serviceEvent) {
-        System.out.println("IP: " + serviceEvent.getInfo().getPropertyString("ip"));
-        System.out.println("Service removed: " + serviceEvent.getInfo());
-        Server server = new Server(serviceEvent.getName()
-                , serviceEvent.getInfo().getPropertyString("ip")
-                , serviceEvent.getInfo().getPort());
-        Platform.runLater(() -> serverRemovedListener.onServerRemoved(server));
     }
 
     @Override
     public void serviceResolved(ServiceEvent serviceEvent) {
-        System.out.println("Service resolved: " + serviceEvent.getInfo());
     }
 
 }
