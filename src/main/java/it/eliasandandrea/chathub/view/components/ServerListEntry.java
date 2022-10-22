@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.view.components;
 
+import it.eliasandandrea.chathub.model.Server;
 import it.eliasandandrea.chathub.view.ResourceLoader;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
@@ -12,9 +13,11 @@ public class ServerListEntry extends HBox {
 
     private Label serverNameLbl;
     private ImageView iconImg;
+    private Server server;
 
-    public ServerListEntry(ReadOnlyDoubleProperty widthProperty, String name) {
+    public ServerListEntry(ReadOnlyDoubleProperty widthProperty, Server server) {
         super();
+        this.server = server;
         super.getStyleClass().add("backgroundSidebar");
         super.getStyleClass().add("server-entry");
         super.setPrefHeight(30);
@@ -27,7 +30,7 @@ public class ServerListEntry extends HBox {
         iconImg.setFitHeight(18);
         super.getChildren().add(iconImg);
 
-        serverNameLbl = new Label(name);
+        serverNameLbl = new Label(server.getName());
         serverNameLbl.getStyleClass().add("server-entry-lbl");
         serverNameLbl.prefWidthProperty().bind(widthProperty.subtract(50));
         super.getChildren().add(serverNameLbl);
@@ -50,4 +53,7 @@ public class ServerListEntry extends HBox {
         serverNameLbl.getStyleClass().add("server-entry-lbl");
     }
 
+    public Server getServer() {
+        return server;
+    }
 }

@@ -9,6 +9,7 @@ module it.eliasandandrea.chathub {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires javax.jmdns;
 
     opens it.eliasandandrea.chathub to javafx.fxml;
     exports it.eliasandandrea.chathub;

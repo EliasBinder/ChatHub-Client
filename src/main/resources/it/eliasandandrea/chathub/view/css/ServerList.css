@@ -74,6 +74,7 @@
     -fx-text-fill: #ECECEC;
     -fx-font-size: 14px;
     -fx-font-family: "Poppins";
+    -fx-background-radius: 5;
 }
 
 .btn{
@@ -88,4 +89,18 @@
 .btn:hover{
     -fx-effect: dropshadow(GAUSSIAN, rgba(90,100,100,0.8), 15, .6, 0, 0);
     -fx-cursor: hand;
+}
+
+.change-username-container{
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.change-username-container{
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.change-username-label{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 18px;
+    -fx-font-family: "Poppins";
 }

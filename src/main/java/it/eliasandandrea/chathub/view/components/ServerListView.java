@@ -1,9 +1,12 @@
 package it.eliasandandrea.chathub.view.components;
 
+import it.eliasandandrea.chathub.model.zeroconf.ServerFinder;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+
+import java.util.LinkedList;
 
 public class ServerListView extends VBox {
 
@@ -27,12 +30,25 @@ public class ServerListView extends VBox {
         serverList.setMinHeight(200);
         serverList.setAlignment(Pos.TOP_CENTER);
         VBox.setVgrow(serverList, Priority.ALWAYS);
-        ServerListEntry server1 = new ServerListEntry(super.widthProperty(), "Server 1");
-        server1.select();
-        serverList.getChildren().add(server1);
-        serverList.getChildren().add(new ServerListEntry(super.widthProperty(), "Server 2"));
-        serverList.getChildren().add(new ServerListEntry(super.widthProperty(), "Server 3"));
         super.getChildren().add(serverList);
+
+        LinkedList<ServerListEntry> serverListEntries = new LinkedList<>();
+
+        new ServerFinder(server -> {
+            //Server Added
+            ServerListEntry serverListEntry = new ServerListEntry(super.widthProperty(), server);
+            serverListEntries.add(serverListEntry);
+            serverList.getChildren().add(serverListEntry);
+        }, server -> {
+            //Server Removed
+            for (ServerListEntry serverListEntry : serverListEntries) {
+                if (serverListEntry.getServer().equals(server)) {
+                    serverList.getChildren().remove(serverListEntry);
+                    serverListEntries.remove(serverListEntry);
+                    break;
+                }
+            }
+        });
     }
 
 }

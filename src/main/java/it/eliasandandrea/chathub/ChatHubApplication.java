@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub;
 
+import it.eliasandandrea.chathub.model.zeroconf.ServerFinder;
 import it.eliasandandrea.chathub.view.ServerList;
 import javafx.application.Application;
 import javafx.scene.Scene;
