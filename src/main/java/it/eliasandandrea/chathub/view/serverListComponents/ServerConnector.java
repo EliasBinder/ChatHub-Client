@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub.view.components;
+package it.eliasandandrea.chathub.view.serverListComponents;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

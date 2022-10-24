@@ -1,7 +1,7 @@
 package it.eliasandandrea.chathub.model.encryption;
 
 import it.eliasandandrea.chathub.ObjectByteConverter;
-import it.eliasandandrea.chathub.model.messageTypes.Message;
+import it.eliasandandrea.chathub.model.message.Message;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;

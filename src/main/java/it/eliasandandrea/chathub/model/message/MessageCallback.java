@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub.model.messageTypes;
+package it.eliasandandrea.chathub.model.message;
 
 @FunctionalInterface
 public interface MessageCallback {

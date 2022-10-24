@@ -1,13 +1,10 @@
 package it.eliasandandrea.chathub.view;
 
-import it.eliasandandrea.chathub.model.zeroconf.ServerFinder;
-import it.eliasandandrea.chathub.view.components.ChangeUsernameDialog;
-import it.eliasandandrea.chathub.view.components.ServerConnector;
-import it.eliasandandrea.chathub.view.components.ServerListView;
+import it.eliasandandrea.chathub.view.serverListComponents.ChangeUsernameDialog;
+import it.eliasandandrea.chathub.view.serverListComponents.ServerConnector;
+import it.eliasandandrea.chathub.view.serverListComponents.ServerListView;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;

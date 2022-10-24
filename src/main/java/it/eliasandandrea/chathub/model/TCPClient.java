@@ -3,9 +3,9 @@ package it.eliasandandrea.chathub.model;
 import it.eliasandandrea.chathub.ObjectByteConverter;
 import it.eliasandandrea.chathub.model.encryption.Keystore;
 import it.eliasandandrea.chathub.model.encryption.RSACipher;
-import it.eliasandandrea.chathub.model.messageTypes.BroadcastKeyMessage;
-import it.eliasandandrea.chathub.model.messageTypes.Message;
-import it.eliasandandrea.chathub.model.messageTypes.MessageCallback;
+import it.eliasandandrea.chathub.model.message.types.BroadcastKeyMessage;
+import it.eliasandandrea.chathub.model.message.Message;
+import it.eliasandandrea.chathub.model.message.MessageCallback;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -13,7 +13,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.net.Socket;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Executors;
 

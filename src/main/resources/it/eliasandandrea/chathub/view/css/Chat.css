@@ -1,0 +1,56 @@
+.description-lbl{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-font-family: "Poppins";
+    -fx-padding: 10 2 2 10;
+}
+
+.background{
+    -fx-background-color: #1b1b1b;
+}
+
+.backgroundSidebar{
+    -fx-background-color: #292929;
+}
+
+.split-pane:vertical > .split-pane-divider{
+    -fx-background-color: transparent;
+}
+
+.split-pane-divider{
+    -fx-padding: 1 ;
+    -fx-background-color: #808080;
+}
+
+.logo{
+    -fx-padding: 10;
+}
+
+.header{
+    -fx-padding: 10;
+}
+
+.user-entry{
+    -fx-background-color: #292929;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.user-entry-selected{
+    -fx-background-color: #FFA31A;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.user-entry-lbl{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.user-entry-lbl-selected{
+    -fx-text-fill: #1b1b1b;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}

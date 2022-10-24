@@ -1,8 +1,6 @@
-package it.eliasandandrea.chathub.view.components;
+package it.eliasandandrea.chathub.view.serverListComponents;
 
 import com.github.javafaker.Faker;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;

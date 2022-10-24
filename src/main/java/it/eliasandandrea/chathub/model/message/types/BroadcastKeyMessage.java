@@ -1,10 +1,11 @@
-package it.eliasandandrea.chathub.model.messageTypes;
+package it.eliasandandrea.chathub.model.message.types;
 
 import it.eliasandandrea.chathub.model.encryption.RSACipher;
+import it.eliasandandrea.chathub.model.message.Message;
 
 import java.security.PublicKey;
 
-public class BroadcastKeyMessage implements Message{
+public class BroadcastKeyMessage implements Message {
 
     PublicKey publicKey;
 
