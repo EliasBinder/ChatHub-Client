@@ -1,6 +1,7 @@
 package it.eliasandandrea.chathub.view;
 
 import it.eliasandandrea.chathub.model.zeroconf.ServerFinder;
+import it.eliasandandrea.chathub.view.components.ChangeUsernameDialog;
 import it.eliasandandrea.chathub.view.components.ServerConnector;
 import it.eliasandandrea.chathub.view.components.ServerListView;
 import javafx.geometry.Pos;
@@ -13,12 +14,13 @@ import javafx.scene.layout.*;
 
 public class ServerList extends StackPane {
 
-    private VBox changeUsername;
-    boolean changeUsernameVisible = false;
-
     public ServerList() {
         super();
         super.getStylesheets().add(ResourceLoader.loadStylesheet("ServerList.css"));
+        super.setAlignment(Pos.TOP_RIGHT);
+
+        ChangeUsernameDialog changeUsernameDialog = new ChangeUsernameDialog();
+
         VBox vBox = new VBox();
         vBox.getStyleClass().add("background");
 
@@ -28,11 +30,9 @@ public class ServerList extends StackPane {
         header.getStyleClass().add("background");
 
         StackPane logoContainer = new StackPane();
-        logoContainer.setOnMouseClicked(event -> toggleChangeUsername());
         int logoScale = 22;
         logoContainer.setPrefWidth((((double)2560)/logoScale)+30);
         ImageView logo = new ImageView(new Image(ResourceLoader.loadImage("ChatHubLogo.png")));
-        logo.setOnMouseClicked(event -> toggleChangeUsername());
         logo.getStyleClass().add("logo");
         logo.setFitWidth(((double)2560)/logoScale);
         logo.setFitHeight(((double)905)/logoScale);
@@ -44,6 +44,7 @@ public class ServerList extends StackPane {
         header.getChildren().add(headerSpacer);
 
         StackPane accountContainer = new StackPane();
+        accountContainer.setOnMouseClicked(event -> changeUsernameDialog.toggle());
         int accountScale = 3;
         accountContainer.setMinHeight((((double)100)/accountScale)+15);
         accountContainer.setMinWidth((((double)100)/accountScale)+15);
@@ -71,29 +72,7 @@ public class ServerList extends StackPane {
         vBox.getChildren().add(splitPane);
 
         super.getChildren().add(vBox);
-    }
-
-    private void toggleChangeUsername() {
-        if (changeUsernameVisible) {
-            super.getChildren().remove(changeUsername);
-        } else {
-            changeUsername = new VBox();
-            changeUsername.setAlignment(Pos.CENTER);
-            changeUsername.getStyleClass().add("change-username-container");
-            changeUsername.prefWidthProperty().bind(super.widthProperty());
-            changeUsername.prefHeightProperty().bind(super.heightProperty());
-            changeUsername.setVisible(false);
-
-            Label changeUsernameLabel = new Label("Change Username");
-            changeUsernameLabel.getStyleClass().add("change-username-label");
-            changeUsername.getChildren().add(changeUsernameLabel);
-
-            TextField changeUsernameField = new TextField();
-            changeUsernameField.getStyleClass().add("connection-setup-textfield");
-            changeUsername.getChildren().add(changeUsernameField);
-
-            super.getChildren().add(changeUsername);
-        }
+        super.getChildren().add(changeUsernameDialog);
     }
 
 }

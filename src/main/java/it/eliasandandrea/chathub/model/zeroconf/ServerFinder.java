@@ -20,7 +20,7 @@ public class ServerFinder {
             Executors.newSingleThreadExecutor().submit(() -> {
                 LinkedList<ServiceInfo> serviceInfos = new LinkedList<>();
                 while(true){
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                     try {
                         ServiceInfo[] serviceInfoArray = jmdns.list("_chathub._tcp.local.");
                         for (ServiceInfo info : serviceInfoArray) {
