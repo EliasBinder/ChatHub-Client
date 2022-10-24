@@ -1,6 +1,6 @@
 package it.eliasandandrea.chathub;
 
-import it.eliasandandrea.chathub.model.RSACipher;
+import it.eliasandandrea.chathub.model.encryption.RSACipher;
 import it.eliasandandrea.chathub.util.LocalPaths;
 
 import java.nio.file.Path;

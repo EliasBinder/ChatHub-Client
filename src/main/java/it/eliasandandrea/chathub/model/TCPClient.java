@@ -50,7 +50,7 @@ public class TCPClient {
 
     public void sendMessage(Message message, String receiver) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
         if (receiver.startsWith(".")){ //receiver is user
-           RSACipher.getInstance().encrypt(message, Keystore.getInstance().getKey(receiver));
+           RSACipher.encrypt(message, Keystore.getInstance().getKey(receiver));
         }
     }
 }

@@ -1,5 +1,8 @@
 package it.eliasandandrea.chathub.model.encryption;
 
+import it.eliasandandrea.chathub.ObjectByteConverter;
+import it.eliasandandrea.chathub.model.message.Message;
+
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
@@ -61,8 +64,15 @@ public class RSACipher {
         return encryptCipher.doFinal(message.getBytes());
     }
 
-    public String decrypt(byte[] message) throws IllegalBlockSizeException, BadPaddingException {
-        return new String(decryptCipher.doFinal(message));
+    public static byte[] encrypt(Message message, PublicKey publicKey) throws IllegalBlockSizeException,
+            BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
+        Cipher encryptor = Cipher.getInstance("RSA");
+        encryptor.init(Cipher.ENCRYPT_MODE, publicKey);
+        return encryptor.doFinal(ObjectByteConverter.serialize(message));
+    }
+
+    public byte[] decrypt(byte[] message) throws IllegalBlockSizeException, BadPaddingException {
+        return decryptCipher.doFinal(message);
     }
 
     private static byte[] encryptPrivateKey(PrivateKey privateKey, String password)
