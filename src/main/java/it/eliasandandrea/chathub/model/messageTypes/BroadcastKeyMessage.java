@@ -1,12 +1,14 @@
 package it.eliasandandrea.chathub.model.messageTypes;
 
-import it.eliasandandrea.chathub.model.RSACipher;
+import it.eliasandandrea.chathub.model.encryption.RSACipher;
+
+import java.security.PublicKey;
 
 public class BroadcastKeyMessage implements Message{
 
+    PublicKey publicKey;
 
-    @Override
-    public byte[] getContent() {
-        return RSACipher.getInstance().getPublicKey().getEncoded();
+    public BroadcastKeyMessage() {
+        this.publicKey = RSACipher.getInstance().getPublicKey();
     }
 }

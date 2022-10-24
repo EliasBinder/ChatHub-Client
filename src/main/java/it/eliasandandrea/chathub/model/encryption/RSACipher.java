@@ -1,9 +1,13 @@
-package it.eliasandandrea.chathub.model;
+package it.eliasandandrea.chathub.model.encryption;
+
+import it.eliasandandrea.chathub.ObjectByteConverter;
+import it.eliasandandrea.chathub.model.messageTypes.Message;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
 import java.security.*;
 
 public class RSACipher {
@@ -26,7 +30,7 @@ public class RSACipher {
 
     public RSACipher(String password) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         this.password = password;
-//TODO: write to file
+        //TODO: write to file
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
         KeyPair pair = generator.generateKeyPair();
@@ -44,12 +48,14 @@ public class RSACipher {
         return publicKey;
     }
 
-    public byte[] encrypt(String message) throws IllegalBlockSizeException, BadPaddingException {
-        return encryptCipher.doFinal(message.getBytes());
+    public byte[] encrypt(Message message, PublicKey key) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
+        Cipher encryptor = Cipher.getInstance("RSA");
+        encryptor.init(Cipher.ENCRYPT_MODE, key);
+        return encryptor.doFinal(ObjectByteConverter.serialize(message));
     }
 
-    public String decrypt(byte[] message) throws IllegalBlockSizeException, BadPaddingException {
-        return new String(decryptCipher.doFinal(message));
+    public byte[] decrypt(byte[] message) throws IllegalBlockSizeException, BadPaddingException {
+        return decryptCipher.doFinal(message);
     }
 
 }
