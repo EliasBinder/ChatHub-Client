@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub.view.serverListComponents;
+package it.eliasandandrea.chathub.view.chatComponents;
 
 import it.eliasandandrea.chathub.view.ResourceLoader;
 import javafx.geometry.Pos;

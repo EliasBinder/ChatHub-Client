@@ -43,7 +43,7 @@
     -fx-padding: 8;
 }
 
-.server-entry-selected{
+.server-entry:selected{
     -fx-background-color: #FFA31A;
     -fx-background-radius: 5;
     -fx-padding: 8;
@@ -55,7 +55,7 @@
     -fx-font-family: "Poppins";
 }
 
-.server-entry-lbl-selected{
+.server-entry-lbl:selected{
     -fx-text-fill: #1b1b1b;
     -fx-font-size: 14px;
     -fx-font-family: "Poppins";
@@ -125,4 +125,8 @@
     -fx-text-fill: #A5A5A5;
     -fx-font-size: 14px;
     -fx-font-family: "Poppins";
+}
+
+.loading{
+    -fx-background-color: rgba(0,0,0,0.7);
 }

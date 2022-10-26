@@ -1,6 +1,7 @@
-package it.eliasandandrea.chathub.view.serverListComponents;
+package it.eliasandandrea.chathub.view.chatComponents;
 
 import it.eliasandandrea.chathub.view.ResourceLoader;
+import it.eliasandandrea.chathub.view.sharedComponents.ListEntry;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class UserGroupListEntry extends HBox implements ListEntry{
+public class UserGroupListEntry extends HBox implements ListEntry {
 
     ImageView iconImg;
     Label nameLbl;

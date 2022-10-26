@@ -2,14 +2,17 @@ package it.eliasandandrea.chathub.view.serverListComponents;
 
 import it.eliasandandrea.chathub.model.Server;
 import it.eliasandandrea.chathub.view.ResourceLoader;
+import it.eliasandandrea.chathub.view.sharedComponents.ListEntry;
+import it.eliasandandrea.chathub.view.sharedComponents.ListEntrySelectCallback;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class ServerListEntry extends HBox implements ListEntry{
+public class ServerListEntry extends HBox implements ListEntry {
 
     private Label serverNameLbl;
     private ImageView iconImg;
@@ -43,19 +46,15 @@ public class ServerListEntry extends HBox implements ListEntry{
 
     public void select(){
         callback.onSelected(this);
-        super.getStyleClass().remove("server-entry");
-        super.getStyleClass().add("server-entry-selected");
+        super.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), true);
         iconImg.setImage(new Image(ResourceLoader.loadImage("server_black.png")));
-        serverNameLbl.getStyleClass().remove("server-entry-lbl");
-        serverNameLbl.getStyleClass().add("server-entry-lbl-selected");
+        serverNameLbl.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), true);
     }
 
-    public void unselect(){
-        super.getStyleClass().remove("server-entry-selected");
-        super.getStyleClass().add("server-entry");
+    public void unselect() {
+        super.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), false);
         iconImg.setImage(new Image(ResourceLoader.loadImage("server_white.png")));
-        serverNameLbl.getStyleClass().remove("server-entry-lbl-selected");
-        serverNameLbl.getStyleClass().add("server-entry-lbl");
+        serverNameLbl.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), false);
     }
 
     public Server getServer() {

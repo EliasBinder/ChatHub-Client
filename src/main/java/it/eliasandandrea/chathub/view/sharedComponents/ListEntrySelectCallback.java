@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub.view.serverListComponents;
+package it.eliasandandrea.chathub.view.sharedComponents;
 
 @FunctionalInterface
 public interface ListEntrySelectCallback {

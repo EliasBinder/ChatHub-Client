@@ -1,5 +1,7 @@
 package it.eliasandandrea.chathub.view.serverListComponents;
 
+import it.eliasandandrea.chathub.model.Server;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,7 +13,7 @@ import javafx.scene.layout.VBox;
 
 public class ServerConnector extends VBox {
 
-    public ServerConnector(StringProperty serverAddressProperty, StringProperty serverPortProperty){
+    public ServerConnector(StringProperty serverAddressProperty, IntegerProperty serverPortProperty, ConnectCallback callback){
         super();
         super.getStyleClass().add("background");
         super.setMinWidth(200);
@@ -47,12 +49,20 @@ public class ServerConnector extends VBox {
         connectionSettings.getChildren().add(inputContainer);
 
         TextField ip = new TextField();
-        ip.textProperty().bind(serverAddressProperty);
+        ip.textProperty().bindBidirectional(serverAddressProperty);
         ip.setMaxWidth(350);
         addInput(descriptionContainer, inputContainer, "Server Address", ip);
 
         TextField port = new TextField();
-        port.textProperty().bind(serverPortProperty);
+        port.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                port.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            serverPortProperty.setValue(Integer.parseInt(port.getText()));
+        });
+        serverPortProperty.addListener((observable, oldValue, newValue) -> {
+            port.setText(newValue.toString());
+        });
         port.setMaxWidth(80);
         addInput(descriptionContainer, inputContainer, "Port", port);
 
@@ -60,6 +70,7 @@ public class ServerConnector extends VBox {
 
         Button connect = new Button("Connect");
         connect.getStyleClass().add("btn");
+        connect.setOnAction(e -> callback.startConnect(new Server("", serverAddressProperty.get(), serverPortProperty.get())));
         connectionDetails.getChildren().add(connect);
 
         super.getChildren().add(connectionDetails);

@@ -11,6 +11,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -20,11 +21,14 @@ public class TCPClient {
 
     private BufferedInputStream in;
     private BufferedOutputStream out;
+    MessageCallback onMessage;
 
-    public TCPClient(String host, int port, Runnable onConnectionFail, MessageCallback onMessage) {
+    public TCPClient(String host, int port, Runnable onConnectionFail, Runnable onConnectionSuccess, MessageCallback onMessage) {
+        this.onMessage = onMessage;
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
-                Socket socket = new Socket(host, port);
+                Socket socket = new Socket();
+                socket.connect(new InetSocketAddress(host, port), 7000);
                 in = new BufferedInputStream(socket.getInputStream());
                 out = new BufferedOutputStream(socket.getOutputStream());
                 Executors.newSingleThreadExecutor().submit(() -> {
@@ -35,17 +39,23 @@ public class TCPClient {
                     }
                 });
                 while (true) {
-                    //create byte array from in
-                    byte[] bytes = in.readAllBytes();
-                    bytes = RSACipher.getInstance().decrypt(bytes);
-                    //Convert bytes to object and execute callback
-                    onMessage.onMessage((Message) ObjectByteConverter.deserialize(bytes));
+                    try {
+                        //create byte array from in
+                        byte[] bytes = in.readAllBytes();
+                        bytes = RSACipher.getInstance().decrypt(bytes);
+                        //Convert bytes to object and execute callback
+                        this.onMessage.onMessage((Message) ObjectByteConverter.deserialize(bytes));
+                    }catch (Exception ex){}
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 onConnectionFail.run();
             }
         });
+    }
+
+    public void setOnMessage(MessageCallback onMessage) {
+        this.onMessage = onMessage;
     }
 
     public void sendMessage(Message message, String receiver) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {

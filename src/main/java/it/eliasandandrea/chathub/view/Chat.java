@@ -1,7 +1,7 @@
 package it.eliasandandrea.chathub.view;
 
-import it.eliasandandrea.chathub.view.serverListComponents.ChatView;
-import it.eliasandandrea.chathub.view.serverListComponents.UserGroupListView;
+import it.eliasandandrea.chathub.view.chatComponents.ChatView;
+import it.eliasandandrea.chathub.view.chatComponents.UserGroupListView;
 import javafx.geometry.Pos;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;

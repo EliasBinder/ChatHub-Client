@@ -1,6 +1,8 @@
 package it.eliasandandrea.chathub.view.serverListComponents;
 
+import it.eliasandandrea.chathub.model.Server;
 import it.eliasandandrea.chathub.model.zeroconf.ServerFinder;
+import it.eliasandandrea.chathub.view.sharedComponents.ListEntrySelectCallback;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
@@ -9,6 +11,8 @@ import javafx.scene.layout.VBox;
 import java.util.LinkedList;
 
 public class ServerListView extends VBox {
+
+    private LinkedList<ServerListEntry> serverListEntries;
 
     public ServerListView(ServerSelectCallback serverSelectCallback) {
         super();
@@ -32,7 +36,7 @@ public class ServerListView extends VBox {
         VBox.setVgrow(serverList, Priority.ALWAYS);
         super.getChildren().add(serverList);
 
-        LinkedList<ServerListEntry> serverListEntries = new LinkedList<>();
+        serverListEntries = new LinkedList<>();
         ListEntrySelectCallback listEntrySelectCallback = listEntry -> {
             for (ServerListEntry serverListEntry : serverListEntries) {
                 if (serverListEntry != listEntry) {
@@ -57,6 +61,23 @@ public class ServerListView extends VBox {
                 }
             }
         });
+    }
+
+    public boolean selectServer(Server server) {
+        for (ServerListEntry serverListEntry : serverListEntries) {
+            if (serverListEntry.getServer().getAddress().equals(server.getAddress())
+                && serverListEntry.getServer().getPort() == server.getPort()) {
+                    serverListEntry.select();
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public void deselect() {
+        for (ServerListEntry serverListEntry : serverListEntries) {
+            serverListEntry.unselect();
+        }
     }
 
 }
