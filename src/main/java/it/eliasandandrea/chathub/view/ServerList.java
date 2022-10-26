@@ -1,8 +1,9 @@
 package it.eliasandandrea.chathub.view;
 
-import it.eliasandandrea.chathub.view.serverListComponents.ChangeUsernameDialog;
-import it.eliasandandrea.chathub.view.serverListComponents.ServerConnector;
-import it.eliasandandrea.chathub.view.serverListComponents.ServerListView;
+import it.eliasandandrea.chathub.model.Server;
+import it.eliasandandrea.chathub.view.serverListComponents.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
@@ -13,6 +14,7 @@ public class ServerList extends StackPane {
 
     public ServerList() {
         super();
+        super.getStylesheets().add(ResourceLoader.loadStylesheet("Shared.css"));
         super.getStylesheets().add(ResourceLoader.loadStylesheet("ServerList.css"));
         super.setAlignment(Pos.TOP_RIGHT);
 
@@ -53,19 +55,25 @@ public class ServerList extends StackPane {
         accountContainer.getChildren().add(account);
         header.getChildren().add(accountContainer);
 
-        //TODO
-        header.widthProperty().addListener((observable, oldValue, newValue) -> {
-            headerSpacer.setPrefWidth(newValue.doubleValue() - logoContainer.getPrefWidth() - accountContainer.getPrefWidth() - 90);
-        });
+        headerSpacer.prefWidthProperty().bind(header.widthProperty().subtract(logoContainer.widthProperty()).subtract(accountContainer.widthProperty()).subtract(90));
 
         vBox.getChildren().add(header);
+
+        StringProperty serverAddress = new SimpleStringProperty();
+        StringProperty serverPort = new SimpleStringProperty();
+        ServerSelectCallback serverSelectCallback = entry -> {
+            ServerListEntry serverListEntry = (ServerListEntry) entry;
+            Server server = serverListEntry.getServer();
+            serverAddress.set(server.getAddress());
+            serverPort.set(server.getPort()+"");
+        };
 
         SplitPane splitPane = new SplitPane();
         splitPane.getStyleClass().add("background");
         splitPane.setDividerPositions(0.3);
         splitPane.prefWidthProperty().bind(vBox.widthProperty());
         splitPane.prefHeightProperty().bind(vBox.heightProperty());
-        splitPane.getItems().addAll(new ServerListView(), new ServerConnector());
+        splitPane.getItems().addAll(new ServerListView(serverSelectCallback), new ServerConnector(serverAddress, serverPort));
         vBox.getChildren().add(splitPane);
 
         super.getChildren().add(vBox);

@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class UserGroupListEntry extends HBox {
+public class UserGroupListEntry extends HBox implements ListEntry{
 
     ImageView iconImg;
     Label nameLbl;

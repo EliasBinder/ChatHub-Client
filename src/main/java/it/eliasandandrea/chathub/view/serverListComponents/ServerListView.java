@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 public class ServerListView extends VBox {
 
-    public ServerListView() {
+    public ServerListView(ServerSelectCallback serverSelectCallback) {
         super();
         super.getStyleClass().add("backgroundSidebar");
         super.setMinWidth(200);
@@ -33,10 +33,18 @@ public class ServerListView extends VBox {
         super.getChildren().add(serverList);
 
         LinkedList<ServerListEntry> serverListEntries = new LinkedList<>();
+        ListEntrySelectCallback listEntrySelectCallback = listEntry -> {
+            for (ServerListEntry serverListEntry : serverListEntries) {
+                if (serverListEntry != listEntry) {
+                    serverListEntry.unselect();
+                }
+            }
+            serverSelectCallback.onServerSelected(listEntry);
+        };
 
         new ServerFinder(server -> {
             //Server Added
-            ServerListEntry serverListEntry = new ServerListEntry(super.widthProperty(), server);
+            ServerListEntry serverListEntry = new ServerListEntry(super.widthProperty(), server, listEntrySelectCallback);
             serverListEntries.add(serverListEntry);
             serverList.getChildren().add(serverListEntry);
         }, server -> {

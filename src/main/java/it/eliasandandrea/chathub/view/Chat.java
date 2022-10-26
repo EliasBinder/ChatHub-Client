@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.view;
 
+import it.eliasandandrea.chathub.view.serverListComponents.ChatView;
 import it.eliasandandrea.chathub.view.serverListComponents.UserGroupListView;
 import javafx.geometry.Pos;
 import javafx.scene.control.SplitPane;
@@ -13,6 +14,7 @@ public class Chat extends StackPane {
 
     public Chat() {
         super();
+        super.getStylesheets().add(ResourceLoader.loadStylesheet("Shared.css"));
         super.getStylesheets().add(ResourceLoader.loadStylesheet("Chat.css"));
 
         VBox vBox = new VBox();
@@ -40,7 +42,7 @@ public class Chat extends StackPane {
         splitPane.setDividerPositions(0.3);
         splitPane.prefWidthProperty().bind(vBox.widthProperty());
         splitPane.prefHeightProperty().bind(vBox.heightProperty());
-        splitPane.getItems().addAll(new UserGroupListView(), new StackPane());
+        splitPane.getItems().addAll(new UserGroupListView(), new ChatView());
         vBox.getChildren().add(splitPane);
 
         super.getChildren().add(vBox);

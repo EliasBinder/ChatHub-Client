@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.view.serverListComponents;
 
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,7 +11,7 @@ import javafx.scene.layout.VBox;
 
 public class ServerConnector extends VBox {
 
-    public ServerConnector() {
+    public ServerConnector(StringProperty serverAddressProperty, StringProperty serverPortProperty){
         super();
         super.getStyleClass().add("background");
         super.setMinWidth(200);
@@ -46,10 +47,12 @@ public class ServerConnector extends VBox {
         connectionSettings.getChildren().add(inputContainer);
 
         TextField ip = new TextField();
+        ip.textProperty().bind(serverAddressProperty);
         ip.setMaxWidth(350);
         addInput(descriptionContainer, inputContainer, "Server Address", ip);
 
         TextField port = new TextField();
+        port.textProperty().bind(serverPortProperty);
         port.setMaxWidth(80);
         addInput(descriptionContainer, inputContainer, "Port", port);
 

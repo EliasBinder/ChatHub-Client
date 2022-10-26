@@ -9,21 +9,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class ServerListEntry extends HBox {
+public class ServerListEntry extends HBox implements ListEntry{
 
     private Label serverNameLbl;
     private ImageView iconImg;
     private Server server;
+    private ListEntrySelectCallback callback;
 
-    public ServerListEntry(ReadOnlyDoubleProperty widthProperty, Server server) {
+    public ServerListEntry(ReadOnlyDoubleProperty widthProperty, Server server, ListEntrySelectCallback callback) {
         super();
         this.server = server;
+        this.callback = callback;
+
         super.getStyleClass().add("backgroundSidebar");
         super.getStyleClass().add("server-entry");
         super.setPrefHeight(30);
         super.maxWidthProperty().bind(widthProperty.subtract(35));
         super.setAlignment(Pos.CENTER);
         super.setSpacing(10);
+        super.setOnMouseClicked(e -> select());
 
         iconImg = new ImageView(new Image(ResourceLoader.loadImage("server_white.png")));
         iconImg.setFitWidth(18);
@@ -38,6 +42,7 @@ public class ServerListEntry extends HBox {
     }
 
     public void select(){
+        callback.onSelected(this);
         super.getStyleClass().remove("server-entry");
         super.getStyleClass().add("server-entry-selected");
         iconImg.setImage(new Image(ResourceLoader.loadImage("server_black.png")));
