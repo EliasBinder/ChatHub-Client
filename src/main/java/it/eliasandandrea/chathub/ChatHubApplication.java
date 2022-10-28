@@ -13,8 +13,8 @@ public class ChatHubApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Scene scene = new Scene(new StackPane(), 800, 450);
-        //scene.setRoot(new ServerList(scene));
-        scene.setRoot(new Chat());
+        scene.setRoot(new ServerList(scene));
+        //scene.setRoot(new Chat());
         stage.setTitle("ChatHub");
         stage.setScene(scene);
         stage.show();
