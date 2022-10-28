@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub;
 
+import it.eliasandandrea.chathub.view.Chat;
 import it.eliasandandrea.chathub.view.ServerList;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -12,7 +13,8 @@ public class ChatHubApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Scene scene = new Scene(new StackPane(), 800, 450);
-        scene.setRoot(new ServerList(scene));
+        //scene.setRoot(new ServerList(scene));
+        scene.setRoot(new Chat());
         stage.setTitle("ChatHub");
         stage.setScene(scene);
         stage.show();

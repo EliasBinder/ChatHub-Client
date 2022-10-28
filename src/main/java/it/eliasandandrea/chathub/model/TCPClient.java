@@ -42,7 +42,7 @@ public class TCPClient {
                     try {
                         //create byte array from in
                         byte[] bytes = in.readAllBytes();
-                        bytes = RSACipher.getInstance().decrypt(bytes);
+                        bytes = RSACipher.decrypt(bytes, null);
                         //Convert bytes to object and execute callback
                         this.onMessage.onMessage((Message) ObjectByteConverter.deserialize(bytes));
                     }catch (Exception ex){}
@@ -60,7 +60,7 @@ public class TCPClient {
 
     public void sendMessage(Message message, String receiver) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
         if (receiver.startsWith(".")){ //receiver is user
-           RSACipher.encrypt(message, Keystore.getInstance().getKey(receiver));
+           RSACipher.encrypt(message, Keystore.getInstance().getPublicKey(receiver));
         }
     }
 }

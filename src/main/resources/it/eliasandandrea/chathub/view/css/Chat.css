@@ -79,3 +79,28 @@
 .chat-input-icon{
     -fx-padding: 10;
 }
+
+.message-container{
+    -fx-background-color: #1b1b1b;
+    -fx-padding: 10;
+}
+
+.message{
+    -fx-background-color: #292929;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.message:selected{
+    -fx-background-color: #FFA31A;
+}
+
+.message-lbl{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.message-lbl:selected{
+    -fx-text-fill: #1b1b1b;
+}

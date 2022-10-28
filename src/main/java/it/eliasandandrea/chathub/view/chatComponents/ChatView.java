@@ -24,11 +24,12 @@ public class ChatView extends VBox {
         chatHistory.setAlignment(Pos.BOTTOM_CENTER);
         chatHistory.getStyleClass().add("background");
 
-        //TODO delete
-        Label test = new Label();
-        test.setText("test");
-        test.setStyle("-fx-text-fill: #ffffff");
-        chatHistory.getChildren().add(test);
+        //TODO edit
+        MessageEntry testMsg = new MessageEntry(super.widthProperty(), "Test from other user", false);
+        MessageEntry testMsg2 = new MessageEntry(super.widthProperty(), "Test from myself", true);
+        //test with very long message
+        MessageEntry testMsg3 = new MessageEntry(super.widthProperty(), "Test from other user with a very long message that should be wrapped", false);
+        chatHistory.getChildren().addAll(testMsg, testMsg2, testMsg3);
 
         ScrollPane chatHistorySP = new ScrollPane();
         chatHistorySP.getStyleClass().add("background");

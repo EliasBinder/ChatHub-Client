@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.model.encryption;
 
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.HashMap;
 
@@ -13,18 +14,26 @@ public class Keystore {
         return singleton;
     }
 
-    private HashMap<String, PublicKey> keyHashMap;
+    private HashMap<String, KeyCombination> keysMap;
 
     public Keystore(){
-        this.keyHashMap = new HashMap<>();
+        this.keysMap = new HashMap<>();
     }
 
     public void addKey(String user, PublicKey publicKey){
-        keyHashMap.put(user, publicKey);
+        keysMap.put(user, new KeyCombination(publicKey, null));
     }
 
-    public PublicKey getKey(String user){
-        return keyHashMap.get(user);
+    public void addKey(String group, PublicKey publicKey, PrivateKey privateKey){
+        keysMap.put(group, new KeyCombination(publicKey, privateKey));
+    }
+
+    public PublicKey getPublicKey(String thing){
+        return keysMap.get(thing).publicKey;
+    }
+
+    public PrivateKey getPrivateKey(String thing){
+        return keysMap.get(thing).privateKey;
     }
 
 }

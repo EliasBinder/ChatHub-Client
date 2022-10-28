@@ -26,6 +26,7 @@ public class RSACipher {
     public static RSACipher getInstance() {
         return singleton;
     }
+
     public static void init(Path publicKeyPath, Path privateKeyPath, String password) throws Exception {
         if (!publicKeyPath.toFile().exists() || !privateKeyPath.toFile().exists()) {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -39,8 +40,6 @@ public class RSACipher {
     }
 
     private final PublicKey publicKey;
-    private final Cipher encryptCipher;
-    private final Cipher decryptCipher;
 
     public RSACipher(Path pub, Path priv, String password) throws Exception {
         byte[] encodedPub = readKeyFromFile(pub);
@@ -48,21 +47,12 @@ public class RSACipher {
 
         this.publicKey = bytesToPublicKey(encodedPub);
         PrivateKey privateKey = decryptPrivateKey(encodedPriv, password);
-
-        encryptCipher = Cipher.getInstance("RSA");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-        decryptCipher = Cipher.getInstance("RSA");
-        decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
     }
 
     public PublicKey getPublicKey() {
         return publicKey;
     }
 
-    public byte[] encrypt(String message) throws IllegalBlockSizeException, BadPaddingException {
-        return encryptCipher.doFinal(message.getBytes());
-    }
 
     public static byte[] encrypt(Message message, PublicKey publicKey) throws IllegalBlockSizeException,
             BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
@@ -71,8 +61,10 @@ public class RSACipher {
         return encryptor.doFinal(ObjectByteConverter.serialize(message));
     }
 
-    public byte[] decrypt(byte[] message) throws IllegalBlockSizeException, BadPaddingException {
-        return decryptCipher.doFinal(message);
+    public static byte[] decrypt(byte[] message, PrivateKey privateKey) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        Cipher decryptor = Cipher.getInstance("RSA");
+        decryptor.init(Cipher.DECRYPT_MODE, privateKey);
+        return decryptor.doFinal(message);
     }
 
     private static byte[] encryptPrivateKey(PrivateKey privateKey, String password)

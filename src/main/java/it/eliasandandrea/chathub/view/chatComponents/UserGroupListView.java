@@ -13,7 +13,7 @@ public class UserGroupListView extends VBox {
         super.setMaxWidth(330);
         super.setSpacing(22);
 
-        Label label = new Label("Users | Groups");
+        Label label = new Label("Chats");
         label.getStyleClass().add("description-lbl");
         label.setAlignment(Pos.CENTER);
         label.prefWidthProperty().bind(super.widthProperty());
