@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub;
+package it.eliasandandrea.chathub.model.encryption;
 
 import java.io.*;
 

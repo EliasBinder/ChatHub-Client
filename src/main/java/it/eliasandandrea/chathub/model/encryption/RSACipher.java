@@ -1,7 +1,5 @@
 package it.eliasandandrea.chathub.model.encryption;
 
-import it.eliasandandrea.chathub.ObjectByteConverter;
-
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
