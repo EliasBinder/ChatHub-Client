@@ -111,7 +111,7 @@
     -fx-padding: 10;
 }
 
-.dialog-username{
+.dialog-input{
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #808080;
     -fx-background-color: #1b1b1b;
@@ -121,12 +121,17 @@
     -fx-background-radius: 5;
 }
 
+.dialog-input:error{
+    -fx-background-color: #FF7676;
+    -fx-border-color: #F31A1A;
+}
+
 .dialog-lbl {
     -fx-text-fill: #A5A5A5;
     -fx-font-size: 14px;
     -fx-font-family: "Poppins";
 }
 
-.loading{
-    -fx-background-color: rgba(0,0,0,0.7);
+.overlay{
+    -fx-background-color: rgba(0,0,0,0.85);
 }

@@ -24,7 +24,7 @@ public class ChangeUsernameDialog extends VBox {
         super.getChildren().add(usernameLbl);
 
         username = new TextField();
-        username.getStyleClass().add("dialog-username");
+        username.getStyleClass().add("dialog-input");
         username.setMinHeight(20);
         username.setAlignment(Pos.CENTER);
 

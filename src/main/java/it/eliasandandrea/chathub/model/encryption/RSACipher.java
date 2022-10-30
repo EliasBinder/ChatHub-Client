@@ -1,7 +1,6 @@
 package it.eliasandandrea.chathub.model.encryption;
 
 import it.eliasandandrea.chathub.ObjectByteConverter;
-import it.eliasandandrea.chathub.model.message.Message;
 
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
@@ -22,11 +21,6 @@ public class RSACipher {
 
     private static final int SALT_ROUNDS = 20;
 
-    private static RSACipher singleton;
-    public static RSACipher getInstance() {
-        return singleton;
-    }
-
     public static void init(Path publicKeyPath, Path privateKeyPath, String password) throws Exception {
         if (!publicKeyPath.toFile().exists() || !privateKeyPath.toFile().exists()) {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -36,25 +30,20 @@ public class RSACipher {
             writeKeyToFile(pair.getPublic().getEncoded(), publicKeyPath);
             writeKeyToFile(encryptPrivateKey(pair.getPrivate(), password), privateKeyPath);
         }
-        singleton = new RSACipher(publicKeyPath, privateKeyPath, password);
     }
-
-    private final PublicKey publicKey;
 
     public RSACipher(Path pub, Path priv, String password) throws Exception {
         byte[] encodedPub = readKeyFromFile(pub);
         byte[] encodedPriv = readKeyFromFile(priv);
 
-        this.publicKey = bytesToPublicKey(encodedPub);
+        PublicKey publicKey = bytesToPublicKey(encodedPub);
         PrivateKey privateKey = decryptPrivateKey(encodedPriv, password);
+
+        Keystore.getInstance().addKey("client", publicKey, privateKey);
     }
 
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
 
-
-    public static byte[] encrypt(Message message, PublicKey publicKey) throws IllegalBlockSizeException,
+    public static byte[] encrypt(Object message, PublicKey publicKey) throws IllegalBlockSizeException,
             BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
         Cipher encryptor = Cipher.getInstance("RSA");
         encryptor.init(Cipher.ENCRYPT_MODE, publicKey);

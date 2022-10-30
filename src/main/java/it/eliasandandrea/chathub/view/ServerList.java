@@ -3,22 +3,21 @@ package it.eliasandandrea.chathub.view;
 import it.eliasandandrea.chathub.model.Persistence;
 import it.eliasandandrea.chathub.model.Server;
 import it.eliasandandrea.chathub.model.TCPClient;
-import it.eliasandandrea.chathub.model.message.Message;
-import it.eliasandandrea.chathub.model.message.MessageCallback;
+import it.eliasandandrea.chathub.model.encryption.RSACipher;
 import it.eliasandandrea.chathub.view.serverListComponents.*;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class ServerList extends StackPane {
+
+    private ObjectProperty<RSACipher> rsaCipherProperty = new SimpleObjectProperty<>();
 
     public ServerList(Scene scene) {
         super();
@@ -78,7 +77,7 @@ public class ServerList extends StackPane {
         };
 
         StackPane loadingPane = new StackPane();
-        loadingPane.getStyleClass().add("loading");
+        loadingPane.getStyleClass().add("overlay");
         loadingPane.minWidthProperty().bind(super.widthProperty());
         loadingPane.minHeightProperty().bind(super.heightProperty());
         loadingPane.setVisible(false);
@@ -93,7 +92,7 @@ public class ServerList extends StackPane {
             public void startConnect(Server server) {
                 Platform.runLater(() -> {
                     loadingPane.setVisible(true);
-                    Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), () -> {
+                    Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), rsaCipherProperty.get(), () -> {
                         loadingPane.setVisible(false);
                     },() -> {
                         scene.setRoot(new Chat());
@@ -122,9 +121,12 @@ public class ServerList extends StackPane {
             }
         });
 
+        KeystorePasswordPane keystorePasswordPane = new KeystorePasswordPane(rsaCipherProperty, super.widthProperty(), super.heightProperty());
+
         super.getChildren().add(vBox);
         super.getChildren().add(changeUsernameDialog);
         super.getChildren().add(loadingPane);
+        super.getChildren().add(keystorePasswordPane);
     }
 
 }

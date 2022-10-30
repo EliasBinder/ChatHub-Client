@@ -7,14 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
 public class ChatHubApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         Scene scene = new Scene(new StackPane(), 800, 450);
         scene.setRoot(new ServerList(scene));
-        //scene.setRoot(new Chat());
         stage.setTitle("ChatHub");
         stage.setScene(scene);
         stage.show();
