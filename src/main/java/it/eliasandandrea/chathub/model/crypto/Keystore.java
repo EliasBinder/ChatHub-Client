@@ -1,4 +1,4 @@
-package it.eliasandandrea.chathub.model.encryption;
+package it.eliasandandrea.chathub.model.crypto;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;

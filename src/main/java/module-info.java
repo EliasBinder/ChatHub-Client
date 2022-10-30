@@ -10,8 +10,8 @@ module it.eliasandandrea.chathub {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires javax.jmdns;
-    requires javafaker;
     requires java.sql;
+    requires javafaker;
 
     opens it.eliasandandrea.chathub to javafx.fxml;
     exports it.eliasandandrea.chathub;
