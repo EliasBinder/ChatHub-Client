@@ -1,12 +1,12 @@
 package it.eliasandandrea.chathub.model;
 
-import it.eliasandandrea.chathub.model.encryption.ObjectByteConverter;
-import it.eliasandandrea.chathub.model.encryption.Keystore;
-import it.eliasandandrea.chathub.model.encryption.RSACipher;
+import it.eliasandandrea.chathub.model.crypto.CryptManager;
+import it.eliasandandrea.chathub.model.crypto.Keystore;
 import it.eliasandandrea.chathub.model.message.ClientEvent;
 import it.eliasandandrea.chathub.model.message.ServerEvent;
 import it.eliasandandrea.chathub.model.message.types.clientEvents.PublicKeySubmissionEvent;
 import it.eliasandandrea.chathub.model.message.ServerEventCallback;
+import it.eliasandandrea.chathub.util.ObjectByteConverter;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -24,11 +24,13 @@ public class TCPClient {
     private DataInputStream in;
     private DataOutputStream out;
     ServerEventCallback onServerEvent;
-    private RSACipher rsaCipher;
+    private CryptManager rsaCipher;
 
-    public TCPClient(String host, int port, RSACipher rsaCipher, Runnable onConnectionFail, Runnable onConnectionSuccess, ServerEventCallback onMessage) {
+    public TCPClient(String host, int port, CryptManager cryptManager,
+                     Runnable onConnectionFail, Runnable onConnectionSuccess,
+                     ServerEventCallback onMessage) {
         this.onServerEvent = onMessage;
-        this.rsaCipher = rsaCipher;
+        this.rsaCipher = cryptManager;
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
                 Socket socket = new Socket();
@@ -56,7 +58,7 @@ public class TCPClient {
                         // Create byte array from reading bytes
                         byte[] bytes = in.readNBytes(lengthInt);
                         // Decrypt the message
-                        bytes = RSACipher.decrypt(bytes, Keystore.getInstance().getPrivateKey("client"));
+                        bytes = CryptManager.getInstance().decrypt(bytes);
                         //Convert decrypted message to object and execute callback
                         this.onServerEvent.onEvent((ServerEvent) ObjectByteConverter.deserialize(bytes));
                     }catch (Exception ex){
@@ -75,7 +77,7 @@ public class TCPClient {
     }
 
     public void sendEvent(ClientEvent event) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
-        byte[] encryptedObject = RSACipher.encrypt(event, Keystore.getInstance().getPublicKey("server"));
+        byte[] encryptedObject = CryptManager.encrypt(event, Keystore.getInstance().getPublicKey("server"));
         byte[] length = ByteBuffer.allocate(4).putInt(encryptedObject.length).array();
         out.write(length);
         out.flush();

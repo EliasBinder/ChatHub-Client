@@ -3,21 +3,20 @@ package it.eliasandandrea.chathub.view;
 import it.eliasandandrea.chathub.model.Persistence;
 import it.eliasandandrea.chathub.model.Server;
 import it.eliasandandrea.chathub.model.TCPClient;
-import it.eliasandandrea.chathub.model.encryption.RSACipher;
+import it.eliasandandrea.chathub.model.crypto.CryptManager;
 import it.eliasandandrea.chathub.view.serverListComponents.*;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class ServerList extends StackPane {
 
-    private ObjectProperty<RSACipher> rsaCipherProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<CryptManager> cryptManagerObjectProperty = new SimpleObjectProperty<>();
 
     public ServerList(Scene scene) {
         super();
@@ -92,16 +91,12 @@ public class ServerList extends StackPane {
             public void startConnect(Server server) {
                 Platform.runLater(() -> {
                     loadingPane.setVisible(true);
-                });
-                Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), rsaCipherProperty.get(), () -> {
-                    Platform.runLater(() -> {
+                    Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), cryptManagerObjectProperty.get(), () -> {
                         loadingPane.setVisible(false);
-                    });
-                },() -> {
-                    Platform.runLater(() -> {
+                    },() -> {
                         scene.setRoot(new Chat());
-                    });
-                }, (message) -> System.out.println(message));
+                    }, System.out::println);
+                });
             }
         };
 
@@ -125,7 +120,7 @@ public class ServerList extends StackPane {
             }
         });
 
-        KeystorePasswordPane keystorePasswordPane = new KeystorePasswordPane(rsaCipherProperty, super.widthProperty(), super.heightProperty());
+        KeystorePasswordPane keystorePasswordPane = new KeystorePasswordPane(cryptManagerObjectProperty, super.widthProperty(), super.heightProperty());
 
         super.getChildren().add(vBox);
         super.getChildren().add(changeUsernameDialog);

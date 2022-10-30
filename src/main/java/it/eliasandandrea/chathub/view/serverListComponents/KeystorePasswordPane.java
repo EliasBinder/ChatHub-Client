@@ -1,6 +1,6 @@
 package it.eliasandandrea.chathub.view.serverListComponents;
 
-import it.eliasandandrea.chathub.model.encryption.RSACipher;
+import it.eliasandandrea.chathub.model.crypto.CryptManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -17,7 +17,7 @@ public class KeystorePasswordPane extends VBox {
 
     private boolean modeLogin = true;
 
-    public KeystorePasswordPane(ObjectProperty<RSACipher> rsaCipherObjectProperty, ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty) {
+    public KeystorePasswordPane(ObjectProperty<CryptManager> rsaCipherObjectProperty, ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty) {
         super();
         super.getStyleClass().add("overlay");
         super.minWidthProperty().bind(widthProperty);
@@ -52,7 +52,7 @@ public class KeystorePasswordPane extends VBox {
         okButton.setOnAction(event -> {
             if (modeLogin) {
                 try{
-                    RSACipher rsaCipher = new RSACipher(publicKeyPath, privateKeyPath, keyPassField.getText());
+                    CryptManager rsaCipher = new CryptManager(publicKeyPath, privateKeyPath, keyPassField.getText());
                     rsaCipherObjectProperty.set(rsaCipher);
                     super.setVisible(false);
                 }catch (Exception ex){
@@ -62,8 +62,8 @@ public class KeystorePasswordPane extends VBox {
                 }
             } else {
                 try {
-                    RSACipher.init(publicKeyPath, privateKeyPath, keyPassField.textProperty().get());
-                    rsaCipherObjectProperty.set(new RSACipher(publicKeyPath, privateKeyPath, keyPassField.getText()));
+                    CryptManager.init(publicKeyPath, privateKeyPath, keyPassField.textProperty().get());
+                    rsaCipherObjectProperty.set(new CryptManager(publicKeyPath, privateKeyPath, keyPassField.getText()));
                     super.setVisible(false);
                 } catch (Exception e) {
                     e.printStackTrace();
