@@ -15,4 +15,6 @@ module it.eliasandandrea.chathub {
 
     opens it.eliasandandrea.chathub to javafx.fxml;
     exports it.eliasandandrea.chathub;
+    exports it.eliasandandrea.chathub.model.encryption;
+    opens it.eliasandandrea.chathub.model.encryption to javafx.fxml;
 }

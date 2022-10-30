@@ -1,12 +1,11 @@
 package it.eliasandandrea.chathub.model;
 
-import it.eliasandandrea.chathub.ObjectByteConverter;
+import it.eliasandandrea.chathub.model.encryption.ObjectByteConverter;
 import it.eliasandandrea.chathub.model.encryption.Keystore;
 import it.eliasandandrea.chathub.model.encryption.RSACipher;
 import it.eliasandandrea.chathub.model.message.ClientEvent;
 import it.eliasandandrea.chathub.model.message.ServerEvent;
 import it.eliasandandrea.chathub.model.message.types.clientEvents.PublicKeySubmissionEvent;
-import it.eliasandandrea.chathub.model.message.Message;
 import it.eliasandandrea.chathub.model.message.ServerEventCallback;
 
 import javax.crypto.BadPaddingException;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Executors;
@@ -37,10 +35,15 @@ public class TCPClient {
                 socket.connect(new InetSocketAddress(host, port), 7000);
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
+                //send own public key
                 Executors.newSingleThreadExecutor().submit(() -> {
                     try {
-                        sendEvent(new PublicKeySubmissionEvent());
-                    } catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | NoSuchAlgorithmException | InvalidKeyException | IOException e) {
+                        PublicKeySubmissionEvent event = new PublicKeySubmissionEvent(Keystore.getInstance().getPublicKey("client"));
+                        byte[] encoded = ObjectByteConverter.serialize(event);
+                        out.writeInt(encoded.length);
+                        out.write(encoded);
+                        out.flush();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });

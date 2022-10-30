@@ -92,12 +92,16 @@ public class ServerList extends StackPane {
             public void startConnect(Server server) {
                 Platform.runLater(() -> {
                     loadingPane.setVisible(true);
-                    Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), rsaCipherProperty.get(), () -> {
-                        loadingPane.setVisible(false);
-                    },() -> {
-                        scene.setRoot(new Chat());
-                    }, (message) -> System.out.println(message));
                 });
+                Persistence.getInstance().client = new TCPClient(server.getAddress(), server.getPort(), rsaCipherProperty.get(), () -> {
+                    Platform.runLater(() -> {
+                        loadingPane.setVisible(false);
+                    });
+                },() -> {
+                    Platform.runLater(() -> {
+                        scene.setRoot(new Chat());
+                    });
+                }, (message) -> System.out.println(message));
             }
         };
 

@@ -123,7 +123,6 @@
 
 .dialog-input:error{
     -fx-background-color: #FF7676;
-    -fx-border-color: #F31A1A;
 }
 
 .dialog-lbl {
