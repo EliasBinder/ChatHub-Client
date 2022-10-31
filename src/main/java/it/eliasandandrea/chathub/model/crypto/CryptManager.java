@@ -23,11 +23,6 @@ public class CryptManager {
 
     private static final int SALT_ROUNDS = 20;
 
-    private static CryptManager singleton;
-    public static CryptManager getInstance() {
-        return singleton;
-    }
-
     public static void init(Path publicKeyPath, Path privateKeyPath, String password) throws Exception {
         if (!publicKeyPath.toFile().exists() || !privateKeyPath.toFile().exists()) {
             final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
@@ -37,7 +32,6 @@ public class CryptManager {
             writeKeyToFile(pair.getPublic().getEncoded(), publicKeyPath);
             writeKeyToFile(encryptPrivateKey(pair.getPrivate(), password), privateKeyPath);
         }
-        singleton = new CryptManager(publicKeyPath, privateKeyPath, password);
     }
 
     private final PublicKey publicKey;

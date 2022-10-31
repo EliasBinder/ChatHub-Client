@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.model;
 
+import it.eliasandandrea.chathub.model.control.response.Response;
 import it.eliasandandrea.chathub.model.crypto.CryptManager;
 import it.eliasandandrea.chathub.model.crypto.Keystore;
 import it.eliasandandrea.chathub.model.message.ClientEvent;
@@ -37,7 +38,7 @@ public class TCPClient {
                 socket.connect(new InetSocketAddress(host, port), 7000);
                 in = new DataInputStream(socket.getInputStream());
                 out = new DataOutputStream(socket.getOutputStream());
-                //send own public key
+                //handshake
                 Executors.newSingleThreadExecutor().submit(() -> {
                     try {
                         PublicKeySubmissionEvent event = new PublicKeySubmissionEvent(Keystore.getInstance().getPublicKey("client"));
@@ -58,7 +59,7 @@ public class TCPClient {
                         // Create byte array from reading bytes
                         byte[] bytes = in.readNBytes(lengthInt);
                         // Decrypt the message
-                        bytes = CryptManager.getInstance().decrypt(bytes);
+                        bytes = CryptManager.decrypt(bytes);
                         //Convert decrypted message to object and execute callback
                         this.onServerEvent.onEvent((ServerEvent) ObjectByteConverter.deserialize(bytes));
                     }catch (Exception ex){
@@ -77,7 +78,7 @@ public class TCPClient {
     }
 
     public void sendEvent(ClientEvent event) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException {
-        byte[] encryptedObject = CryptManager.encrypt(event, Keystore.getInstance().getPublicKey("server"));
+        byte[] encryptedObject = CryptManager.encrypt((Response) event, Keystore.getInstance().getPublicKey("server"));
         byte[] length = ByteBuffer.allocate(4).putInt(encryptedObject.length).array();
         out.write(length);
         out.flush();
