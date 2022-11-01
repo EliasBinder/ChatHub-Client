@@ -12,9 +12,8 @@ module it.eliasandandrea.chathub {
     requires javax.jmdns;
     requires java.sql;
     requires javafaker;
+    requires ChatHub.Shared;
 
-    opens it.eliasandandrea.chathub to javafx.fxml;
-    exports it.eliasandandrea.chathub;
-    exports it.eliasandandrea.chathub.model.encryption;
-    opens it.eliasandandrea.chathub.model.encryption to javafx.fxml;
+    opens it.eliasandandrea.chathub.client to javafx.fxml;
+    exports it.eliasandandrea.chathub.client;
 }

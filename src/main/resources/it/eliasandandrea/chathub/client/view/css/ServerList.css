@@ -1,0 +1,142 @@
+.description-lbl{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-font-family: "Poppins";
+    -fx-padding: 10 2 2 10;
+}
+
+.background{
+    -fx-background-color: #1b1b1b;
+}
+
+.backgroundSidebar{
+    -fx-background-color: #292929;
+}
+
+.split-pane:vertical > .split-pane-divider{
+    -fx-background-color: transparent;
+}
+
+.split-pane-divider{
+    -fx-padding: 1 ;
+    -fx-background-color: #808080;
+}
+
+.logo{
+    -fx-padding: 10;
+}
+
+.header{
+    -fx-padding: 10;
+}
+
+.account-container:hover{
+    -fx-background-color: #292929;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.server-entry{
+    -fx-background-color: #292929;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.server-entry:selected{
+    -fx-background-color: #FFA31A;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+}
+
+.server-entry-lbl{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.server-entry-lbl:selected{
+    -fx-text-fill: #1b1b1b;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.connection-setup-lbl{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.connection-setup-textfield{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #808080;
+    -fx-background-color: #292929;
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+    -fx-background-radius: 5;
+}
+
+.btn{
+    -fx-background-color: #FFA31A;
+    -fx-background-radius: 5;
+    -fx-text-fill: #1b1b1b;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+    -fx-padding: 7;
+}
+
+.btn:hover{
+    -fx-effect: dropshadow(GAUSSIAN, rgba(90,100,100,0.8), 15, .6, 0, 0);
+    -fx-cursor: hand;
+}
+
+.change-username-container{
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.change-username-container{
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.change-username-label{
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 18px;
+    -fx-font-family: "Poppins";
+}
+
+.dialog{
+    -fx-background-color: #1b1b1b;
+    -fx-effect: dropshadow(GAUSSIAN, rgba(0,0,0,0.6), 25, .5, -5, 0);
+    -fx-padding: 10;
+}
+
+.dialog-input{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #808080;
+    -fx-background-color: #1b1b1b;
+    -fx-text-fill: #ECECEC;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+    -fx-background-radius: 5;
+}
+
+.dialog-input:error{
+    -fx-background-color: #FF7676;
+}
+
+.dialog-lbl {
+    -fx-text-fill: #A5A5A5;
+    -fx-font-size: 14px;
+    -fx-font-family: "Poppins";
+}
+
+.overlay{
+    -fx-background-color: rgba(0,0,0,0.85);
+}
+
+.content{
+    -fx-background-color: #1b1b1b;
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+}
