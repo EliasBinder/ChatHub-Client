@@ -1,7 +1,7 @@
 package it.eliasandandrea.chathub.client.view.serverListComponents;
 
-import it.eliasandandrea.chathub.client.util.LocalPaths;
 import it.eliasandandrea.chathub.shared.crypto.CryptManager;
+import it.eliasandandrea.chathub.shared.util.LocalPaths;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.css.PseudoClass;
