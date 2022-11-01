@@ -1,6 +1,7 @@
 package it.eliasandandrea.chathub.client.view.serverListComponents;
 
 import com.github.javafaker.Faker;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -10,7 +11,7 @@ public class ChangeUsernameDialog extends VBox {
 
     private final TextField username;
 
-    public ChangeUsernameDialog() {
+    public ChangeUsernameDialog(SimpleStringProperty usernameProperty) {
         super();
         super.setSpacing(10);
         super.setMaxWidth(240);
@@ -27,6 +28,7 @@ public class ChangeUsernameDialog extends VBox {
         username.getStyleClass().add("dialog-input");
         username.setMinHeight(20);
         username.setAlignment(Pos.CENTER);
+        usernameProperty.bind(username.textProperty());
 
         Faker faker = new Faker();
         username.setText(faker.superhero().prefix()+faker.name().firstName()+faker.address().buildingNumber());

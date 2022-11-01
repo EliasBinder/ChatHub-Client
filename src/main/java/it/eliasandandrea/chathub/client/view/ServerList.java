@@ -3,6 +3,7 @@ package it.eliasandandrea.chathub.client.view;
 import it.eliasandandrea.chathub.client.model.Persistence;
 import it.eliasandandrea.chathub.client.model.Server;
 import it.eliasandandrea.chathub.client.model.TCPClient;
+import it.eliasandandrea.chathub.client.model.protocol.ServerEventCallbackRouter;
 import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.client.view.serverListComponents.*;
 import javafx.application.Platform;
@@ -24,7 +25,8 @@ public class ServerList extends StackPane {
         super.getStylesheets().add(ResourceLoader.loadStylesheet("ServerList.css"));
         super.setAlignment(Pos.TOP_RIGHT);
 
-        ChangeUsernameDialog changeUsernameDialog = new ChangeUsernameDialog();
+        SimpleStringProperty usernameProperty = new SimpleStringProperty();
+        ChangeUsernameDialog changeUsernameDialog = new ChangeUsernameDialog(usernameProperty);
 
         VBox vBox = new VBox();
         vBox.getStyleClass().add("background");
@@ -92,6 +94,7 @@ public class ServerList extends StackPane {
                 Platform.runLater(() -> {
                     loadingPane.setVisible(true);
                 });
+                Persistence.getInstance().username = usernameProperty.get();
                 Persistence.getInstance().client = new TCPClient(
                         server.getAddress(),
                         server.getPort(),
@@ -100,10 +103,10 @@ public class ServerList extends StackPane {
                             Platform.runLater(() -> loadingPane.setVisible(false));
                         }, () -> { //onConnectionInterrupted
                             Platform.runLater(() -> scene.setRoot(new ServerList(scene)));
-                        }, () -> { //onConnectionSuccess
-                            Platform.runLater(() -> scene.setRoot(new Chat()));
                         },
-                        System.out::println //onServerMessage //TODO
+                        new ServerEventCallbackRouter(() -> { //onConnectionSuccess
+                            Platform.runLater(() -> scene.setRoot(new Chat()));
+                        }) //onServerMessage
                 );
             }
         };

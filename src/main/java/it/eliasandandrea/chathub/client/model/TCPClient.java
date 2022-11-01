@@ -7,8 +7,6 @@ import it.eliasandandrea.chathub.shared.crypto.Packet;
 import it.eliasandandrea.chathub.shared.protocol.ClientEvent;
 import it.eliasandandrea.chathub.shared.protocol.ServerEvent;
 import it.eliasandandrea.chathub.shared.protocol.clientEvents.HandshakeRequestEvent;
-import it.eliasandandrea.chathub.shared.protocol.serverEvents.HandshakeResponseEvent;
-import it.eliasandandrea.chathub.shared.util.ObjectByteConverter;
 import it.eliasandandrea.chathub.shared.util.SocketStreams;
 
 import javax.crypto.BadPaddingException;
@@ -30,10 +28,10 @@ public class TCPClient {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private CryptManager cryptManager;
-    private PublicKey serverPublicKey;
+    public PublicKey serverPublicKey;
 
     public TCPClient(String host, int port, CryptManager cryptManager,
-                     Runnable onConnectionFail, Runnable onConnectionInterrupted, Runnable onConnectionSuccess,
+                     Runnable onConnectionFail, Runnable onConnectionInterrupted,
                      ServerEventCallback onMessage) {
         this.onServerEvent = onMessage;
         this.cryptManager = cryptManager;
@@ -45,8 +43,6 @@ public class TCPClient {
                 socket.connect(new InetSocketAddress(host, port), 7000);
                 inputStream = new DataInputStream(socket.getInputStream());
                 outputStream = new DataOutputStream(socket.getOutputStream());
-
-                onConnectionSuccess.run();
 
                 //initial handshake for submitting public key
                 Executors.newSingleThreadExecutor().submit(() -> {
@@ -67,8 +63,9 @@ public class TCPClient {
                         EncryptedObjectPacket encryptedObjectPacket = (EncryptedObjectPacket) SocketStreams.readObject(inputStream);
                         Packet data = new Packet(cryptManager.decrypt(encryptedObjectPacket));
                         ServerEvent serverEvent = (ServerEvent) data.getSerializable();
-                        onMessage.onServerEvent(serverEvent);
+                        onMessage.onServerEvent(this, serverEvent);
                     } catch (Exception ex){
+                        ex.printStackTrace();
                         connected = false;
                         onConnectionInterrupted.run();
                     }
@@ -86,7 +83,7 @@ public class TCPClient {
 
     public void sendEvent(ClientEvent event) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         EncryptedObjectPacket toSend = CryptManager.encrypt(event, serverPublicKey);
-        if (socket != null)
+        if (outputStream != null)
             Executors.newSingleThreadExecutor().submit(() -> SocketStreams.writeObject(outputStream, toSend));
     }
 }
