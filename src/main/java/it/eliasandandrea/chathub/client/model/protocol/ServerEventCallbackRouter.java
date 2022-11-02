@@ -41,6 +41,7 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
                 }
                 for (Group group : e.groups) {
                     System.out.println("Adding Group: " + group.name);
+                    System.out.println("Pub key length: " + group.publicKey.length);
                     Persistence.getInstance().chats.add(group);
                 }
                 for (User user : e.users) {

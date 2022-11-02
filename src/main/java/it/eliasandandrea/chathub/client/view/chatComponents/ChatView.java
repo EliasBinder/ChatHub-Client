@@ -22,12 +22,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.security.PrivateKey;
-import java.util.LinkedList;
 
 public class ChatView extends VBox {
 
     private String currentUUID;
     private VBox chatHistory;
+    private ScrollPane chatHistorySP;
 
     public ChatView(CryptManager cryptManager){
         super.getStyleClass().add("background");
@@ -46,7 +46,7 @@ public class ChatView extends VBox {
         MessageEntry testMsg3 = new MessageEntry(super.widthProperty(), "Test from other user with a very long message that should be wrapped", "Someone", false, true);
         chatHistory.getChildren().addAll(testMsg, testMsg2, testMsg3);
 
-        ScrollPane chatHistorySP = new ScrollPane();
+        chatHistorySP = new ScrollPane();
         chatHistorySP.getStyleClass().add("background");
         chatHistorySP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         chatHistorySP.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -94,6 +94,7 @@ public class ChatView extends VBox {
             msg.message = input.getText();
             try {
                 ChatEntity receiver = Persistence.getInstance().chats.stream().filter(c -> c.getUUID().equals(currentUUID)).findFirst().get();
+                System.out.println("Algorithm: " + receiver.getPublicKey().getAlgorithm());
                 MessageEvent event = new MessageEvent(
                         Persistence.getInstance().myUUID,
                         receiver,
@@ -104,13 +105,13 @@ public class ChatView extends VBox {
                 ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
                 chatHistory.getChildren().add(messageEntry);
                 input.setText("");
+                chatHistorySP.setVvalue(1.0);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
         Persistence.getInstance().serverEventCallbackRouter.setOnMessageCallback((e) -> {
-            System.out.println("Message received from " + e.senderUUID);
             String senderUUID = e.senderUUID;
             User sender = Persistence.getInstance().chats.stream().filter(chatEntity -> chatEntity.getUUID().equals(senderUUID)).map(chatEntity -> (User)chatEntity).findFirst().orElse(null);
             PrivateKey privateKey;
@@ -124,12 +125,11 @@ public class ChatView extends VBox {
             Message message = e.getMessage(privateKey);
             MessageEntry entry = null;
             if (TextMessage.class.equals(message.getClass())) {
-                TextMessage textMessage = (TextMessage) message; 
-                System.out.println("Message content: " + textMessage.message);
+                TextMessage textMessage = (TextMessage) message;
                 entry = new MessageEntry(super.widthProperty(), textMessage.message, sender.getUsername(), false, isGroup);
             }
-            ChatHistory.getInstance().addMessage(e.senderUUID, entry);
-            if (e.senderUUID.equals(currentUUID)){
+            ChatHistory.getInstance().addMessage(isGroup? e.receiverUUID : e.senderUUID, entry);
+            if ((isGroup? e.receiverUUID : e.senderUUID).equals(currentUUID)){
                 MessageEntry finalEntry = entry;
                 Platform.runLater(() -> chatHistory.getChildren().add(finalEntry));
             }
@@ -139,11 +139,12 @@ public class ChatView extends VBox {
     }
 
     public void setCurrentUUID(String uuid){
-        if (uuid == currentUUID)
+        if (uuid.equals(currentUUID))
             return;
         this.currentUUID = uuid;
         chatHistory.getChildren().clear();
         chatHistory.getChildren().addAll(ChatHistory.getInstance().getMessages(uuid));
+        chatHistorySP.setVvalue(1.0);
     }
 
 }
