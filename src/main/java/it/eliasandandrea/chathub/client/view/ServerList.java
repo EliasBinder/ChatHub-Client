@@ -95,6 +95,9 @@ public class ServerList extends StackPane {
                     loadingPane.setVisible(true);
                 });
                 Persistence.getInstance().username = usernameProperty.get();
+                Persistence.getInstance().serverEventCallbackRouter = new ServerEventCallbackRouter(() -> { //onConnectionSuccess
+                    Platform.runLater(() -> scene.setRoot(new Chat()));
+                });
                 Persistence.getInstance().client = new TCPClient(
                         server.getAddress(),
                         server.getPort(),
@@ -104,9 +107,7 @@ public class ServerList extends StackPane {
                         }, () -> { //onConnectionInterrupted
                             Platform.runLater(() -> scene.setRoot(new ServerList(scene)));
                         },
-                        new ServerEventCallbackRouter(() -> { //onConnectionSuccess
-                            Platform.runLater(() -> scene.setRoot(new Chat()));
-                        }) //onServerMessage
+                        Persistence.getInstance().serverEventCallbackRouter
                 );
             }
         };

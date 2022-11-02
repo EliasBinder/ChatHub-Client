@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.client.model;
 
+import it.eliasandandrea.chathub.client.model.protocol.ServerEventCallbackRouter;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ public class Persistence {
     public String myUUID;
     public String username;
     public LinkedList<ChatEntity> chats = new LinkedList<>();
+    public ServerEventCallbackRouter serverEventCallbackRouter = null;
 
     private Persistence() {
     }

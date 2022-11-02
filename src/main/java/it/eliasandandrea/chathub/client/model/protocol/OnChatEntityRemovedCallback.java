@@ -1,2 +1,7 @@
-package it.eliasandandrea.chathub.client.model.protocol;public class OnChatEntityRemovedCallback {
+package it.eliasandandrea.chathub.client.model.protocol;
+
+public interface OnChatEntityRemovedCallback {
+
+    void onChatEntityRemoved(String uuid);
+
 }

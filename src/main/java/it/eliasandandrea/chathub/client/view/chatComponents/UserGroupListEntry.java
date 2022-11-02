@@ -2,6 +2,7 @@ package it.eliasandandrea.chathub.client.view.chatComponents;
 
 import it.eliasandandrea.chathub.client.view.ResourceLoader;
 import it.eliasandandrea.chathub.client.view.sharedComponents.ListEntry;
+import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -14,10 +15,12 @@ public class UserGroupListEntry extends HBox implements ListEntry {
     ImageView iconImg;
     Label nameLbl;
     boolean isUser;
+    ChatEntity ref;
 
-    public UserGroupListEntry(ReadOnlyDoubleProperty widthProperty, String name, boolean isUser) {
+    public UserGroupListEntry(ReadOnlyDoubleProperty widthProperty, String name, ChatEntity ref, boolean isUser) {
         super();
         this.isUser = isUser;
+        this.ref = ref;
 
         super.getStyleClass().add("backgroundSidebar");
         super.getStyleClass().add("user-entry");
@@ -51,6 +54,10 @@ public class UserGroupListEntry extends HBox implements ListEntry {
         iconImg.setImage(new Image(ResourceLoader.loadImage(isUser ? "user_white.png" : "group_white.png")));
         nameLbl.getStyleClass().remove("user-entry-lbl-selected");
         nameLbl.getStyleClass().add("user-entry-lbl");
+    }
+
+    public void setName(String name){
+        nameLbl.setText(name);
     }
 
 }
