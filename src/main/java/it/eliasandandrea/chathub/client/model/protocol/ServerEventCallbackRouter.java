@@ -6,6 +6,7 @@ import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import it.eliasandandrea.chathub.shared.model.Group;
 import it.eliasandandrea.chathub.shared.model.User;
+import it.eliasandandrea.chathub.shared.protocol.Message;
 import it.eliasandandrea.chathub.shared.protocol.ServerEvent;
 import it.eliasandandrea.chathub.shared.protocol.clientEvents.SetUsernameEvent;
 import it.eliasandandrea.chathub.shared.protocol.serverEvents.*;
@@ -18,6 +19,7 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
     private OnChatEntityAddedCallback onChatEntityAddedCallback;
     private OnChatEntityRemovedCallback onChatEntityRemovedCallback;
     private OnChangeUsernameCallback onChangeUsernameCallback;
+    private OnMessageCallback onMessageCallback;
 
     public ServerEventCallbackRouter(Runnable onConnectionSucceess) {
         this.onConnectionSucceess = onConnectionSucceess;
@@ -93,7 +95,7 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
 
         } else if (MessageEvent.class.equals(event.getClass())) {
             try{
-
+                onMessageCallback.onMessage((MessageEvent) event);
             }catch (Exception e) {
                 e.printStackTrace();
             }
@@ -110,5 +112,9 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
 
     public void setOnChangeUsernameCallback(OnChangeUsernameCallback onChangeUsernameCallback) {
         this.onChangeUsernameCallback = onChangeUsernameCallback;
+    }
+
+    public void setOnMessageCallback(OnMessageCallback onMessageCallback) {
+        this.onMessageCallback = onMessageCallback;
     }
 }

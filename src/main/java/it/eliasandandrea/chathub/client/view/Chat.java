@@ -3,6 +3,7 @@ package it.eliasandandrea.chathub.client.view;
 import it.eliasandandrea.chathub.client.view.chatComponents.ChatChangeCallback;
 import it.eliasandandrea.chathub.client.view.chatComponents.ChatView;
 import it.eliasandandrea.chathub.client.view.chatComponents.UserGroupListView;
+import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
@@ -13,7 +14,7 @@ import javafx.scene.layout.VBox;
 
 public class Chat extends StackPane {
 
-    public Chat() {
+    public Chat(CryptManager cryptManager) {
         super();
         super.getStylesheets().add(ResourceLoader.loadStylesheet("Shared.css"));
         super.getStylesheets().add(ResourceLoader.loadStylesheet("Chat.css"));
@@ -38,7 +39,7 @@ public class Chat extends StackPane {
 
         vBox.getChildren().add(header);
 
-        ChatView chatView = new ChatView();
+        ChatView chatView = new ChatView(cryptManager);
         UserGroupListView userGroupListView = new UserGroupListView(chatView::setCurrentUUID);
 
         SplitPane splitPane = new SplitPane();

@@ -96,7 +96,7 @@ public class ServerList extends StackPane {
                 });
                 Persistence.getInstance().username = usernameProperty.get();
                 Persistence.getInstance().serverEventCallbackRouter = new ServerEventCallbackRouter(() -> { //onConnectionSuccess
-                    Platform.runLater(() -> scene.setRoot(new Chat()));
+                    Platform.runLater(() -> scene.setRoot(new Chat(cryptManagerObjectProperty.get())));
                 });
                 Persistence.getInstance().client = new TCPClient(
                         server.getAddress(),

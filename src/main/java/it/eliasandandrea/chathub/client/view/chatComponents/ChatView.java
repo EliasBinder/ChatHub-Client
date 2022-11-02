@@ -3,6 +3,14 @@ package it.eliasandandrea.chathub.client.view.chatComponents;
 import it.eliasandandrea.chathub.client.model.persistence.ChatHistory;
 import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.view.ResourceLoader;
+import it.eliasandandrea.chathub.shared.crypto.CryptManager;
+import it.eliasandandrea.chathub.shared.model.ChatEntity;
+import it.eliasandandrea.chathub.shared.model.Group;
+import it.eliasandandrea.chathub.shared.model.User;
+import it.eliasandandrea.chathub.shared.protocol.Message;
+import it.eliasandandrea.chathub.shared.protocol.messageTypes.TextMessage;
+import it.eliasandandrea.chathub.shared.protocol.sharedEvents.MessageEvent;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -13,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.security.PrivateKey;
 import java.util.LinkedList;
 
 public class ChatView extends VBox {
@@ -20,7 +29,7 @@ public class ChatView extends VBox {
     private String currentUUID;
     private VBox chatHistory;
 
-    public ChatView(){
+    public ChatView(CryptManager cryptManager){
         super.getStyleClass().add("background");
         super.setMinWidth(400);
         super.setSpacing(20);
@@ -80,6 +89,51 @@ public class ChatView extends VBox {
         send.setFitHeight(26);
         sendContainer.getChildren().add(send);
         chatInputContainer.getChildren().add(sendContainer);
+        sendContainer.setOnMouseClicked(e -> {
+            TextMessage msg = new TextMessage();
+            msg.message = input.getText();
+            try {
+                ChatEntity receiver = Persistence.getInstance().chats.stream().filter(c -> c.getUUID().equals(currentUUID)).findFirst().get();
+                MessageEvent event = new MessageEvent(
+                        Persistence.getInstance().myUUID,
+                        receiver,
+                        msg
+                );
+                Persistence.getInstance().client.sendEvent(event);
+                MessageEntry messageEntry = new MessageEntry(super.widthProperty(), input.getText(), "", true, Group.class.equals(receiver.getClass()));
+                ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
+                chatHistory.getChildren().add(messageEntry);
+                input.setText("");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Persistence.getInstance().serverEventCallbackRouter.setOnMessageCallback((e) -> {
+            System.out.println("Message received from " + e.senderUUID);
+            String senderUUID = e.senderUUID;
+            User sender = Persistence.getInstance().chats.stream().filter(chatEntity -> chatEntity.getUUID().equals(senderUUID)).map(chatEntity -> (User)chatEntity).findFirst().orElse(null);
+            PrivateKey privateKey;
+            boolean isGroup = false;
+            if (e.receiverUUID.equals(Persistence.getInstance().myUUID)) {
+                privateKey = cryptManager.privateKey;
+            } else {
+                isGroup = true;
+                privateKey = Persistence.getInstance().chats.stream().filter(chatEntity -> chatEntity.getUUID().equals(e.receiverUUID)).map(s -> (Group) s).findFirst().get().getPrivateKey();
+            }
+            Message message = e.getMessage(privateKey);
+            MessageEntry entry = null;
+            if (TextMessage.class.equals(message.getClass())) {
+                TextMessage textMessage = (TextMessage) message; 
+                System.out.println("Message content: " + textMessage.message);
+                entry = new MessageEntry(super.widthProperty(), textMessage.message, sender.getUsername(), false, isGroup);
+            }
+            ChatHistory.getInstance().addMessage(e.senderUUID, entry);
+            if (e.senderUUID.equals(currentUUID)){
+                MessageEntry finalEntry = entry;
+                Platform.runLater(() -> chatHistory.getChildren().add(finalEntry));
+            }
+        });
 
         super.getChildren().addAll(chatHistorySP, chatInputContainer);
     }
