@@ -1,6 +1,6 @@
 package it.eliasandandrea.chathub.client.model.protocol;
 
-import it.eliasandandrea.chathub.client.model.Persistence;
+import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.model.TCPClient;
 import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;

@@ -104,3 +104,9 @@
 .message-lbl:selected{
     -fx-text-fill: #1b1b1b;
 }
+
+.message-sender{
+    -fx-text-fill: #FFA31A;
+    -fx-font-size: 12px;
+    -fx-font-family: "Poppins";
+}

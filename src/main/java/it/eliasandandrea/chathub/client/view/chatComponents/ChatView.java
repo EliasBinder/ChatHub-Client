@@ -1,5 +1,7 @@
 package it.eliasandandrea.chathub.client.view.chatComponents;
 
+import it.eliasandandrea.chathub.client.model.persistence.ChatHistory;
+import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.view.ResourceLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
@@ -11,7 +13,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.LinkedList;
+
 public class ChatView extends VBox {
+
+    private String currentUUID;
+    private VBox chatHistory;
 
     public ChatView(){
         super.getStyleClass().add("background");
@@ -19,15 +26,15 @@ public class ChatView extends VBox {
         super.setSpacing(20);
         super.setAlignment(Pos.BOTTOM_CENTER);
 
-        VBox chatHistory = new VBox();
+        chatHistory = new VBox();
         chatHistory.setAlignment(Pos.BOTTOM_CENTER);
         chatHistory.getStyleClass().add("background");
 
         //TODO edit
-        MessageEntry testMsg = new MessageEntry(super.widthProperty(), "Test from other user", false);
-        MessageEntry testMsg2 = new MessageEntry(super.widthProperty(), "Test from myself", true);
+        MessageEntry testMsg = new MessageEntry(super.widthProperty(), "Test from other user", "Andrea", false, true);
+        MessageEntry testMsg2 = new MessageEntry(super.widthProperty(), "Test from myself", "", true, true);
         //test with very long message
-        MessageEntry testMsg3 = new MessageEntry(super.widthProperty(), "Test from other user with a very long message that should be wrapped", false);
+        MessageEntry testMsg3 = new MessageEntry(super.widthProperty(), "Test from other user with a very long message that should be wrapped", "Someone", false, true);
         chatHistory.getChildren().addAll(testMsg, testMsg2, testMsg3);
 
         ScrollPane chatHistorySP = new ScrollPane();
@@ -74,8 +81,15 @@ public class ChatView extends VBox {
         sendContainer.getChildren().add(send);
         chatInputContainer.getChildren().add(sendContainer);
 
-
         super.getChildren().addAll(chatHistorySP, chatInputContainer);
+    }
+
+    public void setCurrentUUID(String uuid){
+        if (uuid == currentUUID)
+            return;
+        this.currentUUID = uuid;
+        chatHistory.getChildren().clear();
+        chatHistory.getChildren().addAll(ChatHistory.getInstance().getMessages(uuid));
     }
 
 }

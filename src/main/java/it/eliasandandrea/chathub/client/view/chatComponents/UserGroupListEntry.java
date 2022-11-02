@@ -2,6 +2,7 @@ package it.eliasandandrea.chathub.client.view.chatComponents;
 
 import it.eliasandandrea.chathub.client.view.ResourceLoader;
 import it.eliasandandrea.chathub.client.view.sharedComponents.ListEntry;
+import it.eliasandandrea.chathub.client.view.sharedComponents.ListEntrySelectCallback;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
@@ -16,11 +17,13 @@ public class UserGroupListEntry extends HBox implements ListEntry {
     Label nameLbl;
     boolean isUser;
     ChatEntity ref;
+    ListEntrySelectCallback callback;
 
-    public UserGroupListEntry(ReadOnlyDoubleProperty widthProperty, String name, ChatEntity ref, boolean isUser) {
+    public UserGroupListEntry(ReadOnlyDoubleProperty widthProperty, String name, ChatEntity ref, boolean isUser, ListEntrySelectCallback callback) {
         super();
         this.isUser = isUser;
         this.ref = ref;
+        this.callback = callback;
 
         super.getStyleClass().add("backgroundSidebar");
         super.getStyleClass().add("user-entry");
@@ -28,6 +31,7 @@ public class UserGroupListEntry extends HBox implements ListEntry {
         super.maxWidthProperty().bind(widthProperty.subtract(35));
         super.setAlignment(Pos.CENTER);
         super.setSpacing(10);
+        super.setOnMouseClicked(e -> select());
 
         iconImg = new ImageView(new Image(ResourceLoader.loadImage(isUser ? "user_white.png" : "group_white.png")));
         iconImg.setFitWidth(18);
@@ -41,6 +45,7 @@ public class UserGroupListEntry extends HBox implements ListEntry {
     }
 
     public void select(){
+        callback.onSelected(this);
         super.getStyleClass().remove("user-entry");
         super.getStyleClass().add("user-entry-selected");
         iconImg.setImage(new Image(ResourceLoader.loadImage(isUser ? "user_black.png" : "group_black.png")));

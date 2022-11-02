@@ -1,6 +1,8 @@
 package it.eliasandandrea.chathub.client.view.chatComponents;
 
-import it.eliasandandrea.chathub.client.model.Persistence;
+import it.eliasandandrea.chathub.client.model.persistence.Persistence;
+import it.eliasandandrea.chathub.client.view.serverListComponents.ServerListEntry;
+import it.eliasandandrea.chathub.client.view.sharedComponents.ListEntrySelectCallback;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import it.eliasandandrea.chathub.shared.model.Group;
 import it.eliasandandrea.chathub.shared.model.User;
@@ -11,12 +13,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UserGroupListView extends VBox {
 
-    public UserGroupListView(){
+    public UserGroupListView(ChatChangeCallback callback){
         super.getStyleClass().add("backgroundSidebar");
         super.setMinWidth(200);
         super.setMaxWidth(330);
@@ -38,13 +40,22 @@ public class UserGroupListView extends VBox {
 
         HashMap<ChatEntity, UserGroupListEntry> domMap = new HashMap<>();
 
+        ListEntrySelectCallback listEntrySelectCallback = listEntry -> {
+            for (UserGroupListEntry serverListEntry : domMap.values()) {
+                if (serverListEntry != listEntry) {
+                    serverListEntry.unselect();
+                }
+            }
+            callback.onChatChange(((UserGroupListEntry)listEntry).ref.getUUID());
+        };
+
         final AtomicBoolean first = new AtomicBoolean(true);
         Persistence.getInstance().chats.forEach(chat -> {
             UserGroupListEntry userGroupListEntry = null;
             if (chat instanceof User usr){
-                userGroupListEntry = new UserGroupListEntry(super.widthProperty(), usr.getUsername(), chat, true);
+                userGroupListEntry = new UserGroupListEntry(super.widthProperty(), usr.getUsername(), chat, true, listEntrySelectCallback);
             }else if (chat instanceof Group grp){
-                userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.getName(), chat, false);
+                userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.getName(), chat, false, listEntrySelectCallback);
             }
             if (first.get())
                 userGroupListEntry.select();
@@ -58,16 +69,30 @@ public class UserGroupListView extends VBox {
                 UserGroupListEntry userGroupListEntry = null;
                 if (chat instanceof User usr) {
                     System.out.println("User added with name: " + usr.username);
-                    userGroupListEntry = new UserGroupListEntry(super.widthProperty(), usr.username, chat, true);
+                    userGroupListEntry = new UserGroupListEntry(super.widthProperty(), usr.username, chat, true, listEntrySelectCallback);
                 } else if (chat instanceof Group grp) {
                     System.out.println("Group added with name: " + grp.name);
-                    userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.name, chat, false);
+                    userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.name, chat, false, listEntrySelectCallback);
                 }
                 UserGroupListEntry finalUserGroupListEntry = userGroupListEntry;
                 Platform.runLater(() -> usersList.getChildren().add(finalUserGroupListEntry));
                 domMap.put(chat, userGroupListEntry);
             }catch (Exception e){
                 e.printStackTrace();
+            }
+        });
+
+        Persistence.getInstance().serverEventCallbackRouter.setOnChatEntityRemovedCallback((uuid) -> {
+            try {
+                for (Map.Entry<ChatEntity, UserGroupListEntry> entry : domMap.entrySet()) {
+                    if (entry.getKey().getUUID().equals(uuid)) {
+                        Platform.runLater(() -> usersList.getChildren().remove(entry.getValue()));
+                        domMap.remove(entry.getKey());
+                        break;
+                    }
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         });
 

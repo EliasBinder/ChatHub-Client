@@ -1,6 +1,6 @@
 package it.eliasandandrea.chathub.client.view;
 
-import it.eliasandandrea.chathub.client.model.Persistence;
+import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.model.Server;
 import it.eliasandandrea.chathub.client.model.TCPClient;
 import it.eliasandandrea.chathub.client.model.protocol.ServerEventCallbackRouter;

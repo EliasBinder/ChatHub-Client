@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.client.view;
 
+import it.eliasandandrea.chathub.client.view.chatComponents.ChatChangeCallback;
 import it.eliasandandrea.chathub.client.view.chatComponents.ChatView;
 import it.eliasandandrea.chathub.client.view.chatComponents.UserGroupListView;
 import javafx.geometry.Pos;
@@ -37,12 +38,15 @@ public class Chat extends StackPane {
 
         vBox.getChildren().add(header);
 
+        ChatView chatView = new ChatView();
+        UserGroupListView userGroupListView = new UserGroupListView(chatView::setCurrentUUID);
+
         SplitPane splitPane = new SplitPane();
         splitPane.getStyleClass().add("background");
         splitPane.setDividerPositions(0.3);
         splitPane.prefWidthProperty().bind(vBox.widthProperty());
         splitPane.prefHeightProperty().bind(vBox.heightProperty());
-        splitPane.getItems().addAll(new UserGroupListView(), new ChatView());
+        splitPane.getItems().addAll(userGroupListView, chatView);
         vBox.getChildren().add(splitPane);
 
         super.getChildren().add(vBox);
