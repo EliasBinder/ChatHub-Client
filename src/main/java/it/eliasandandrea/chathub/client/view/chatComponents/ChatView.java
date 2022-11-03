@@ -39,13 +39,6 @@ public class ChatView extends VBox {
         chatHistory.setAlignment(Pos.BOTTOM_CENTER);
         chatHistory.getStyleClass().add("background");
 
-        //TODO edit
-        MessageEntry testMsg = new MessageEntry(super.widthProperty(), "Test from other user", "Andrea", false, true);
-        MessageEntry testMsg2 = new MessageEntry(super.widthProperty(), "Test from myself", "", true, true);
-        //test with very long message
-        MessageEntry testMsg3 = new MessageEntry(super.widthProperty(), "Test from other user with a very long message that should be wrapped", "Someone", false, true);
-        chatHistory.getChildren().addAll(testMsg, testMsg2, testMsg3);
-
         chatHistorySP = new ScrollPane();
         chatHistorySP.getStyleClass().add("background");
         chatHistorySP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -94,7 +87,6 @@ public class ChatView extends VBox {
             msg.message = input.getText();
             try {
                 ChatEntity receiver = Persistence.getInstance().chats.stream().filter(c -> c.getUUID().equals(currentUUID)).findFirst().get();
-                System.out.println("Algorithm: " + receiver.getPublicKey().getAlgorithm());
                 MessageEvent event = new MessageEvent(
                         Persistence.getInstance().myUUID,
                         receiver,

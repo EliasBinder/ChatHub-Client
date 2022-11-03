@@ -4,6 +4,6 @@ import it.eliasandandrea.chathub.shared.protocol.sharedEvents.MessageEvent;
 
 public interface OnMessageCallback {
 
-    public void onMessage(MessageEvent event) throws Exception;
+    void onMessage(MessageEvent event) throws Exception;
 
 }

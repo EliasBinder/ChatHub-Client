@@ -6,7 +6,6 @@ import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import it.eliasandandrea.chathub.shared.model.Group;
 import it.eliasandandrea.chathub.shared.model.User;
-import it.eliasandandrea.chathub.shared.protocol.Message;
 import it.eliasandandrea.chathub.shared.protocol.ServerEvent;
 import it.eliasandandrea.chathub.shared.protocol.clientEvents.SetUsernameEvent;
 import it.eliasandandrea.chathub.shared.protocol.serverEvents.*;
@@ -40,17 +39,11 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
                     ex.printStackTrace();
                 }
                 for (Group group : e.groups) {
-                    System.out.println("Adding Group: " + group.name);
-                    System.out.println("Pub key length: " + group.publicKey.length);
                     Persistence.getInstance().chats.add(group);
                 }
                 for (User user : e.users) {
-                    System.out.println("Adding User: " + user.username);
                     Persistence.getInstance().chats.add(user);
                 }
-                Persistence.getInstance().chats.forEach(chatEntity -> {
-                    System.out.println("ChatEntity: " + chatEntity.getUUID());
-                });
                 SetUsernameEvent setUsernameEvent = new SetUsernameEvent();
                 setUsernameEvent.username = Persistence.getInstance().username;
                 client.sendEvent(setUsernameEvent);
@@ -60,16 +53,16 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
             }
 
 
-        }else if (ChatEntityAdded.class.equals(event.getClass())) {
-            ChatEntityAdded e = (ChatEntityAdded) event;
+        }else if (ChatEntityAddedEvent.class.equals(event.getClass())) {
+            ChatEntityAddedEvent e = (ChatEntityAddedEvent) event;
             System.out.println("ChatEntityAdded: " + e.entity.UUID);
             Persistence.getInstance().chats.add(e.entity);
             if (onChatEntityAddedCallback != null)
                 onChatEntityAddedCallback.onChatEntityAdded(e.entity);
 
 
-        }else if (ChatEntityRemoved.class.equals(event.getClass())) {
-            ChatEntityRemoved e = (ChatEntityRemoved) event;
+        }else if (ChatEntityRemovedEvent.class.equals(event.getClass())) {
+            ChatEntityRemovedEvent e = (ChatEntityRemovedEvent) event;
             System.out.println("ChatEntityRemoved: " + e.uuid);
             for (ChatEntity chat : Persistence.getInstance().chats) {
                 if (chat.getUUID().equals(e.uuid)) {
