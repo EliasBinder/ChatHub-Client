@@ -127,7 +127,8 @@ public class ChatView extends VBox {
         send.setFitHeight(26);
         sendContainer.getChildren().add(send);
         chatInputContainer.getChildren().add(sendContainer);
-        sendContainer.setOnMouseClicked(e -> {
+
+        Runnable sendMessage = () -> {
             if (input.getText().trim().equals("/quit")){
                 System.exit(0);
                 return;
@@ -150,6 +151,13 @@ public class ChatView extends VBox {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        };
+
+        sendContainer.setOnMouseClicked(e -> {
+            sendMessage.run();
+        });
+        input.setOnAction(e -> {
+            sendMessage.run();
         });
 
         Persistence.getInstance().serverEventCallbackRouter.setOnMessageCallback((e) -> {
@@ -175,7 +183,10 @@ public class ChatView extends VBox {
             ChatHistory.getInstance().addMessage(isGroup? e.receiverUUID : e.senderUUID, entry);
             if ((isGroup? e.receiverUUID : e.senderUUID).equals(currentUUID)){
                 MessageEntry finalEntry = entry;
-                Platform.runLater(() -> chatHistory.getChildren().add(finalEntry));
+                Platform.runLater(() -> {
+                    chatHistory.getChildren().add(finalEntry);
+                    chatHistorySP.setVvalue(1.0);
+                });
             }
         });
 
