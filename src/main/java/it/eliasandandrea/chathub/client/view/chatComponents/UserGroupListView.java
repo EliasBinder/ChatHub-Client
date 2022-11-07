@@ -7,6 +7,7 @@ import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import it.eliasandandrea.chathub.shared.model.Group;
 import it.eliasandandrea.chathub.shared.model.User;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -18,6 +19,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UserGroupListView extends VBox {
+
+    private String selectedChatUUID;
+    private String publicChatUUID;
 
     public UserGroupListView(ChatChangeCallback callback){
         super.getStyleClass().add("backgroundSidebar");
@@ -56,6 +60,7 @@ public class UserGroupListView extends VBox {
                 }
             }
             callback.onChatChange(((UserGroupListEntry)listEntry).ref.getUUID());
+            selectedChatUUID = ((UserGroupListEntry)listEntry).ref.getUUID();
         };
 
         final AtomicBoolean first = new AtomicBoolean(true);
@@ -66,8 +71,11 @@ public class UserGroupListView extends VBox {
             }else if (chat instanceof Group grp){
                 userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.getName(), chat, false, listEntrySelectCallback);
             }
-            if (first.get())
+            if (first.get()) {
                 userGroupListEntry.select();
+                selectedChatUUID = chat.getUUID();
+                publicChatUUID = chat.getUUID();
+            }
             usersList.getChildren().add(userGroupListEntry);
             domMap.put(chat, userGroupListEntry);
             first.set(false);
@@ -94,6 +102,13 @@ public class UserGroupListView extends VBox {
                 for (Map.Entry<ChatEntity, UserGroupListEntry> entry : domMap.entrySet()) {
                     if (entry.getKey().getUUID().equals(uuid)) {
                         Platform.runLater(() -> usersList.getChildren().remove(entry.getValue()));
+                        if (selectedChatUUID.equals(uuid)) {
+                            Platform.runLater(() -> {
+                                callback.onChatChange(publicChatUUID);
+                                selectedChatUUID = publicChatUUID;
+                                domMap.get(Persistence.getInstance().chats.stream().filter(c -> c.getUUID().equals(publicChatUUID)).findFirst().get()).select();
+                            });
+                        }
                         domMap.remove(entry.getKey());
                         break;
                     }

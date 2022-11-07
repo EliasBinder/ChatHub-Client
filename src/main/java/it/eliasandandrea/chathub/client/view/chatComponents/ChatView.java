@@ -33,7 +33,7 @@ import java.security.PrivateKey;
 
 public class ChatView extends VBox {
 
-    private String currentUUID;
+    public String currentUUID;
     private VBox chatHistory;
     private ScrollPane chatHistorySP;
 
