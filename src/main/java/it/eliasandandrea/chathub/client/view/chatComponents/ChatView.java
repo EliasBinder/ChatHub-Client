@@ -3,15 +3,19 @@ package it.eliasandandrea.chathub.client.view.chatComponents;
 import it.eliasandandrea.chathub.client.model.persistence.ChatHistory;
 import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.view.ResourceLoader;
+import it.eliasandandrea.chathub.client.view.chatComponents.messageEntries.ImageMessageEntry;
+import it.eliasandandrea.chathub.client.view.chatComponents.messageEntries.TextMessageEntry;
 import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
 import it.eliasandandrea.chathub.shared.model.Group;
 import it.eliasandandrea.chathub.shared.model.User;
 import it.eliasandandrea.chathub.shared.protocol.Message;
+import it.eliasandandrea.chathub.shared.protocol.messageTypes.ImageMessage;
 import it.eliasandandrea.chathub.shared.protocol.messageTypes.TextMessage;
 import it.eliasandandrea.chathub.shared.protocol.sharedEvents.MessageEvent;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -20,7 +24,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.security.PrivateKey;
 
 public class ChatView extends VBox {
@@ -70,6 +78,42 @@ public class ChatView extends VBox {
         attachment.setFitHeight(23);
         attachmentContainer.getChildren().add(attachment);
         chatInputContainer.getChildren().add(attachmentContainer);
+        attachmentContainer.setOnMouseClicked(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select an image to send");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*")
+            );
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null && selectedFile.exists()){
+                try {
+                    FileInputStream fis = new FileInputStream(selectedFile);
+                    byte[] fileContent = new byte[(int) selectedFile.length()];
+                    fis.read(fileContent);
+                    ImageMessage imageMessage = new ImageMessage();
+                    imageMessage.image = fileContent;
+                    ChatEntity receiver = Persistence.getInstance().chats.stream().filter(c -> c.getUUID().equals(currentUUID)).findFirst().get();
+                    MessageEvent event = new MessageEvent(
+                            Persistence.getInstance().myUUID,
+                            receiver,
+                            imageMessage
+                    );
+                    Persistence.getInstance().client.sendEvent(event);
+                    ImageMessageEntry messageEntry = new ImageMessageEntry(super.widthProperty(), fileContent, "", true, Group.class.equals(receiver.getClass()));
+                    ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
+                    chatHistory.getChildren().add(messageEntry);
+                    chatHistorySP.setVvalue(1.0);
+                } catch (Exception ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Error while sending the image");
+                    alert.setContentText("An error occurred while sending the image. Please try again.");
+                    alert.showAndWait();
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         StackPane sendContainer = new StackPane();
         sendContainer.getStyleClass().add("chat-input-icon-container");
@@ -93,7 +137,7 @@ public class ChatView extends VBox {
                         msg
                 );
                 Persistence.getInstance().client.sendEvent(event);
-                MessageEntry messageEntry = new MessageEntry(super.widthProperty(), input.getText(), "", true, Group.class.equals(receiver.getClass()));
+                TextMessageEntry messageEntry = new TextMessageEntry(super.widthProperty(), input.getText(), "", true, Group.class.equals(receiver.getClass()));
                 ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
                 chatHistory.getChildren().add(messageEntry);
                 input.setText("");
@@ -118,7 +162,10 @@ public class ChatView extends VBox {
             MessageEntry entry = null;
             if (TextMessage.class.equals(message.getClass())) {
                 TextMessage textMessage = (TextMessage) message;
-                entry = new MessageEntry(super.widthProperty(), textMessage.message, sender.getUsername(), false, isGroup);
+                entry = new TextMessageEntry(super.widthProperty(), textMessage.message, sender.getUsername(), false, isGroup);
+            } else if (ImageMessage.class.equals(message.getClass())) {
+                ImageMessage imageMessage = (ImageMessage) message;
+                entry = new ImageMessageEntry(super.widthProperty(), imageMessage.image, sender.getUsername(), false, isGroup);
             }
             ChatHistory.getInstance().addMessage(isGroup? e.receiverUUID : e.senderUUID, entry);
             if ((isGroup? e.receiverUUID : e.senderUUID).equals(currentUUID)){

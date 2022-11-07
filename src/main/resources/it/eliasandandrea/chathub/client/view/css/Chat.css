@@ -101,6 +101,10 @@
     -fx-font-family: "Poppins";
 }
 
+.message-img{
+    -fx-background-radius: 5;
+}
+
 .message-lbl:selected{
     -fx-text-fill: #1b1b1b;
 }
