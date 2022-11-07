@@ -55,6 +55,8 @@ public class ChatView extends VBox {
         chatHistorySP.setFitToWidth(true);
         chatHistorySP.setContent(chatHistory);
 
+        chatHistory.minHeightProperty().bind(chatHistorySP.heightProperty().subtract(2));
+
         HBox chatInputContainer = new HBox();
         chatInputContainer.getStyleClass().add("chat-input-container");
         chatInputContainer.setAlignment(Pos.CENTER_LEFT);
