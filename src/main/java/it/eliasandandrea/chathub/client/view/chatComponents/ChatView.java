@@ -104,7 +104,7 @@ public class ChatView extends VBox {
                     ImageMessageEntry messageEntry = new ImageMessageEntry(super.widthProperty(), fileContent, "", true, Group.class.equals(receiver.getClass()));
                     ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
                     chatHistory.getChildren().add(messageEntry);
-                    chatHistorySP.setVvalue(1.0);
+                    Platform.runLater(() -> chatHistorySP.setVvalue(1.0));
                 } catch (Exception ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -147,7 +147,7 @@ public class ChatView extends VBox {
                 ChatHistory.getInstance().addMessage(currentUUID, messageEntry);
                 chatHistory.getChildren().add(messageEntry);
                 input.setText("");
-                chatHistorySP.setVvalue(1.0);
+                Platform.runLater(() -> chatHistorySP.setVvalue(1.0));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -185,7 +185,7 @@ public class ChatView extends VBox {
                 MessageEntry finalEntry = entry;
                 Platform.runLater(() -> {
                     chatHistory.getChildren().add(finalEntry);
-                    chatHistorySP.setVvalue(1.0);
+                    Platform.runLater(() -> chatHistorySP.setVvalue(1.0));
                 });
             }
         });
@@ -199,7 +199,7 @@ public class ChatView extends VBox {
         this.currentUUID = uuid;
         chatHistory.getChildren().clear();
         chatHistory.getChildren().addAll(ChatHistory.getInstance().getMessages(uuid));
-        chatHistorySP.setVvalue(1.0);
+        Platform.runLater(() -> chatHistorySP.setVvalue(1.0));
     }
 
 }
