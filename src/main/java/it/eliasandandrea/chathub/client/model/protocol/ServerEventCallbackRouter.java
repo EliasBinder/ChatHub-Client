@@ -62,7 +62,6 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
 
         }else if (ChatEntityRemovedEvent.class.equals(event.getClass())) {
             ChatEntityRemovedEvent e = (ChatEntityRemovedEvent) event;
-            System.out.println("ChatEntityRemoved: " + e.uuid);
             for (ChatEntity chat : Persistence.getInstance().chats) {
                 if (chat.getUUID().equals(e.uuid)) {
                     Persistence.getInstance().chats.remove(chat);
