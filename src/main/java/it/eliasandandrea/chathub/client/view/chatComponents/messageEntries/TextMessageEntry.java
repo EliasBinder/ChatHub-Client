@@ -21,6 +21,7 @@ public class TextMessageEntry extends MessageEntry {
         }else{
             messageLbl.pseudoClassStateChanged(PseudoClass.getPseudoClass("selected"), false);
         }
+        super.getChildren().add(panel);
     }
 
 }

@@ -52,15 +52,14 @@ public class ChatView extends VBox {
         chatHistorySP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         chatHistorySP.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         chatHistorySP.minWidthProperty().bind(super.widthProperty());
-        chatHistorySP.setFitToHeight(true);
         chatHistorySP.setFitToWidth(true);
         chatHistorySP.setContent(chatHistory);
-        VBox.setVgrow(chatHistorySP, Priority.ALWAYS);
 
         HBox chatInputContainer = new HBox();
         chatInputContainer.getStyleClass().add("chat-input-container");
         chatInputContainer.setAlignment(Pos.CENTER_LEFT);
         chatInputContainer.setSpacing(10);
+
         TextField input = new TextField();
         input.setPromptText("Type your message here...");
         input.getStyleClass().add("chat-input");

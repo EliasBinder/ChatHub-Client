@@ -28,8 +28,6 @@ public abstract class MessageEntry extends HBox {
             panel.setSpacing(7);
         }
 
-        super.getChildren().add(panel);
-
         if (isOwn) {
             super.setAlignment(Pos.CENTER_RIGHT);
             panel.setAlignment(Pos.CENTER_RIGHT);
