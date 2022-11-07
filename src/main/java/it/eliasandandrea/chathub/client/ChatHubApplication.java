@@ -11,10 +11,11 @@ import javafx.stage.Stage;
 public class ChatHubApplication extends Application {
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(new StackPane(), 800, 450);
         ResourceLoader.loadFont("Poppins-Regular.ttf");
+        Scene scene = new Scene(new StackPane(), 800, 450);
         scene.setRoot(new ServerList(scene));
         stage.setTitle("ChatHub");
+        stage.setOnCloseRequest(e -> System.exit(0));
         stage.setScene(scene);
         stage.show();
     }

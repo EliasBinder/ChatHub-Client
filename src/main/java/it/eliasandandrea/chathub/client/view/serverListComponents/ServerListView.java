@@ -5,6 +5,7 @@ import it.eliasandandrea.chathub.client.model.Server;
 import it.eliasandandrea.chathub.client.view.sharedComponents.ListEntrySelectCallback;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -27,14 +28,23 @@ public class ServerListView extends VBox {
         label.prefWidthProperty().bind(super.widthProperty());
         super.getChildren().add(label);
 
+        ScrollPane serverListSP = new ScrollPane();
+        serverListSP.getStyleClass().add("backgroundSidebar");
+        serverListSP.prefWidthProperty().bind(super.widthProperty());
+        serverListSP.setFitToWidth(true);
+        serverListSP.getStyleClass().add("scroll-bar-sidebar");
+        serverListSP.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        serverListSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        serverListSP.setMinHeight(100);
+        super.getChildren().add(serverListSP);
+
         VBox serverList = new VBox();
         serverList.getStyleClass().add("backgroundSidebar");
         serverList.setSpacing(5);
-        serverList.prefWidthProperty().bind(super.widthProperty());
-        serverList.setMinHeight(200);
+        serverList.prefWidthProperty().bind(serverListSP.widthProperty());
         serverList.setAlignment(Pos.TOP_CENTER);
-        VBox.setVgrow(serverList, Priority.ALWAYS);
-        super.getChildren().add(serverList);
+        serverList.minHeightProperty().bind(serverListSP.minHeightProperty().subtract(2));
+        serverListSP.setContent(serverList);
 
         serverListEntries = new LinkedList<>();
         ListEntrySelectCallback listEntrySelectCallback = listEntry -> {

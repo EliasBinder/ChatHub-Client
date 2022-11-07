@@ -9,6 +9,7 @@ import it.eliasandandrea.chathub.shared.model.User;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -30,13 +31,21 @@ public class UserGroupListView extends VBox {
         label.prefWidthProperty().bind(super.widthProperty());
         super.getChildren().add(label);
 
+        ScrollPane usersListSP = new ScrollPane();
+        usersListSP.getStyleClass().add("backgroundSidebar");
+        usersListSP.prefWidthProperty().bind(super.widthProperty());
+        usersListSP.setFitToWidth(true);
+        usersListSP.getStyleClass().add("scroll-bar-sidebar");
+        usersListSP.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        usersListSP.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        super.getChildren().add(usersListSP);
+
         VBox usersList = new VBox();
         usersList.getStyleClass().add("backgroundSidebar");
         usersList.setSpacing(5);
-        usersList.prefWidthProperty().bind(super.widthProperty());
-        usersList.setMinHeight(200);
+        usersList.prefWidthProperty().bind(usersListSP.widthProperty());
         usersList.setAlignment(Pos.TOP_CENTER);
-        VBox.setVgrow(usersList, Priority.ALWAYS);
+        usersList.minHeightProperty().bind(usersListSP.minHeightProperty().subtract(2));
 
         HashMap<ChatEntity, UserGroupListEntry> domMap = new HashMap<>();
 
@@ -108,7 +117,7 @@ public class UserGroupListView extends VBox {
             }
         });
 
-        super.getChildren().add(usersList);
+        usersListSP.setContent(usersList);
     }
 
 }
