@@ -126,6 +126,10 @@ public class ChatView extends VBox {
         sendContainer.getChildren().add(send);
         chatInputContainer.getChildren().add(sendContainer);
         sendContainer.setOnMouseClicked(e -> {
+            if (input.getText().trim().equals("/quit")){
+                System.exit(0);
+                return;
+            }
             TextMessage msg = new TextMessage();
             msg.message = input.getText();
             try {
