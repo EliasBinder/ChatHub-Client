@@ -65,7 +65,6 @@ public class TCPClient {
                         ServerEvent serverEvent = (ServerEvent) data.getSerializable();
                         onMessage.onServerEvent(this, serverEvent);
                     } catch (Exception ex){
-                        ex.printStackTrace();
                         connected = false;
                         onConnectionInterrupted.run();
                     }
