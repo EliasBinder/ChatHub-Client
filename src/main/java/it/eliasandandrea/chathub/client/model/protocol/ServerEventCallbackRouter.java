@@ -55,7 +55,6 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
 
         }else if (ChatEntityAddedEvent.class.equals(event.getClass())) {
             ChatEntityAddedEvent e = (ChatEntityAddedEvent) event;
-            System.out.println("ChatEntityAdded: " + e.entity.UUID);
             Persistence.getInstance().chats.add(e.entity);
             if (onChatEntityAddedCallback != null)
                 onChatEntityAddedCallback.onChatEntityAdded(e.entity);
@@ -76,7 +75,6 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
 
         }else if (ChangeUsernameEvent.class.equals(event.getClass())) {
             ChangeUsernameEvent e = (ChangeUsernameEvent) event;
-            System.out.println("ChangeUsernameEvent: " + e.uuid + " " + e.username);
             for (ChatEntity chat : Persistence.getInstance().chats) {
                 if (chat.getUUID().equals(e.uuid)) {
                     ((User)chat).username = e.username;

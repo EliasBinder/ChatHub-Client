@@ -77,10 +77,8 @@ public class UserGroupListView extends VBox {
             try {
                 UserGroupListEntry userGroupListEntry = null;
                 if (chat instanceof User usr) {
-                    System.out.println("User added with name: " + usr.username);
                     userGroupListEntry = new UserGroupListEntry(super.widthProperty(), usr.username, chat, true, listEntrySelectCallback);
                 } else if (chat instanceof Group grp) {
-                    System.out.println("Group added with name: " + grp.name);
                     userGroupListEntry = new UserGroupListEntry(super.widthProperty(), grp.name, chat, false, listEntrySelectCallback);
                 }
                 UserGroupListEntry finalUserGroupListEntry = userGroupListEntry;

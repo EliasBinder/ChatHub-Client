@@ -2,7 +2,6 @@ package it.eliasandandrea.chathub.client.view.chatComponents.messageEntries;
 
 import it.eliasandandrea.chathub.client.view.chatComponents.MessageEntry;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.css.PseudoClass;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
