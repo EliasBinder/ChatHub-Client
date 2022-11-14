@@ -7,11 +7,13 @@ public class Server {
     private String name;
     private String address;
     private int port;
+    private int type;
 
-    public Server(String name, String address, int port) {
+    public Server(String name, String address, int port, int type) {
         this.name = name;
         this.address = address;
         this.port = port;
+        this.type = type;
     }
 
     public String getName() {
@@ -26,6 +28,9 @@ public class Server {
         return port;
     }
 
+    public int getType() {
+        return type;
+    }
     //equals method
 
 
@@ -45,6 +50,9 @@ public class Server {
             return false;
         }
         if (this.port != other.port) {
+            return false;
+        }
+        if (this.type != other.type) {
             return false;
         }
         return true;

@@ -1,19 +1,22 @@
 package it.eliasandandrea.chathub.client.view.serverListComponents;
 
 import it.eliasandandrea.chathub.client.model.Server;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.NumberStringConverter;
+
+import java.util.Objects;
 
 public class ServerConnector extends VBox {
 
-    public ServerConnector(StringProperty serverAddressProperty, IntegerProperty serverPortProperty, ConnectCallback callback){
+    public ServerConnector(StringProperty serverAddressProperty, IntegerProperty serverPortProperty, IntegerProperty serverTypeProperty, ConnectCallback callback){
         super();
         super.getStyleClass().add("background");
         super.setMinWidth(200);
@@ -30,6 +33,37 @@ public class ServerConnector extends VBox {
         connectionDetails.prefHeightProperty().bind(super.heightProperty());
         connectionDetails.setAlignment(Pos.TOP_CENTER);
         connectionDetails.setSpacing(40);
+
+        HBox connectionType = new HBox();
+        connectionType.getStyleClass().add("background");
+        connectionType.setAlignment(Pos.TOP_CENTER);
+        connectionType.setSpacing(50);
+
+        ToggleGroup connectionTypeGroup = new ToggleGroup();
+        RadioButton tcp = new RadioButton("TCP");
+        tcp.getStyleClass().add("radio-btn");
+        tcp.getProperties().put("type", 1);
+        tcp.setSelected(true);
+        RadioButton rmi = new RadioButton("RMI");
+        rmi.getStyleClass().add("radio-btn");
+        rmi.getProperties().put("type", 2);
+        connectionType.getChildren().addAll(tcp, rmi);
+        connectionTypeGroup.getToggles().addAll(tcp, rmi);
+        connectionTypeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                serverTypeProperty.setValue((int) newValue.getProperties().get("type"));
+            }
+        });
+        serverTypeProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.equals(1)) {
+                    connectionTypeGroup.selectToggle(tcp);
+                } else {
+                    connectionTypeGroup.selectToggle(rmi);
+                }
+            }
+        });
+
 
         HBox connectionSettings = new HBox();
         connectionSettings.getStyleClass().add("background");
@@ -66,11 +100,12 @@ public class ServerConnector extends VBox {
         port.setMaxWidth(80);
         addInput(descriptionContainer, inputContainer, "Port", port);
 
+        connectionDetails.getChildren().add(connectionType);
         connectionDetails.getChildren().add(connectionSettings);
 
         Button connect = new Button("Connect");
         connect.getStyleClass().add("btn");
-        connect.setOnAction(e -> callback.startConnect(new Server("", serverAddressProperty.get(), serverPortProperty.get())));
+        connect.setOnAction(e -> callback.startConnect(new Server("", serverAddressProperty.get(), serverPortProperty.get(), serverTypeProperty.get())));
         connectionDetails.getChildren().add(connect);
 
         super.getChildren().add(connectionDetails);

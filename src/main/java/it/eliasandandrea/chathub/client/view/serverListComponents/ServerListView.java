@@ -76,7 +76,8 @@ public class ServerListView extends VBox {
     public boolean selectServer(Server server) {
         for (ServerListEntry serverListEntry : serverListEntries) {
             if (serverListEntry.getServer().getAddress().equals(server.getAddress())
-                && serverListEntry.getServer().getPort() == server.getPort()) {
+                && serverListEntry.getServer().getPort() == server.getPort()
+                && serverListEntry.getServer().getType() == server.getType()) {
                     serverListEntry.select();
                     return true;
             }

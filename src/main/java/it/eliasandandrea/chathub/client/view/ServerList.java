@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.client.view;
 
+import it.eliasandandrea.chathub.client.model.RMIClient;
 import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.model.Server;
 import it.eliasandandrea.chathub.client.model.TCPClient;
@@ -69,12 +70,14 @@ public class ServerList extends StackPane {
 
         StringProperty serverAddress = new SimpleStringProperty();
         IntegerProperty serverPort = new SimpleIntegerProperty();
+        IntegerProperty serverType = new SimpleIntegerProperty();
 
         ServerSelectCallback serverSelectCallback = entry -> {
             ServerListEntry serverListEntry = (ServerListEntry) entry;
             Server server = serverListEntry.getServer();
             serverAddress.set(server.getAddress());
             serverPort.set(server.getPort());
+            serverType.set(server.getType());
         };
 
         StackPane loadingPane = new StackPane();
@@ -98,17 +101,31 @@ public class ServerList extends StackPane {
                 Persistence.getInstance().serverEventCallbackRouter = new ServerEventCallbackRouter(() -> { //onConnectionSuccess
                     Platform.runLater(() -> scene.setRoot(new Chat(cryptManagerObjectProperty.get())));
                 });
-                Persistence.getInstance().client = new TCPClient(
-                        server.getAddress(),
-                        server.getPort(),
-                        cryptManagerObjectProperty.get(),
-                        () -> { //onConnectionFail
-                            Platform.runLater(() -> loadingPane.setVisible(false));
-                        }, () -> { //onConnectionInterrupted
-                            Platform.runLater(() -> scene.setRoot(new ServerList(scene)));
-                        },
-                        Persistence.getInstance().serverEventCallbackRouter
-                );
+                if (server.getType() == 1) { //use TCP connection
+                    Persistence.getInstance().client = new TCPClient(
+                            server.getAddress(),
+                            server.getPort(),
+                            cryptManagerObjectProperty.get(),
+                            () -> { //onConnectionFail
+                                Platform.runLater(() -> loadingPane.setVisible(false));
+                            }, () -> { //onConnectionInterrupted
+                                Platform.runLater(() -> scene.setRoot(new ServerList(scene)));
+                            },
+                            Persistence.getInstance().serverEventCallbackRouter
+                    );
+                }else if (server.getType() == 2) { //use RMI connection
+                    Persistence.getInstance().client = new RMIClient(
+                            server.getAddress(),
+                            server.getPort(),
+                            cryptManagerObjectProperty.get(),
+                            () -> { //onConnectionFail
+                                Platform.runLater(() -> loadingPane.setVisible(false));
+                            }, () -> { //onConnectionInterrupted
+                                Platform.runLater(() -> scene.setRoot(new ServerList(scene)));
+                            },
+                            Persistence.getInstance().serverEventCallbackRouter
+                    );
+                }
             }
         };
 
@@ -118,16 +135,21 @@ public class ServerList extends StackPane {
         splitPane.prefWidthProperty().bind(vBox.widthProperty());
         splitPane.prefHeightProperty().bind(vBox.heightProperty());
         ServerListView serverListView = new ServerListView(serverSelectCallback);
-        splitPane.getItems().addAll(serverListView, new ServerConnector(serverAddress, serverPort, connectCallback));
+        splitPane.getItems().addAll(serverListView, new ServerConnector(serverAddress, serverPort, serverType, connectCallback));
         vBox.getChildren().add(splitPane);
 
         serverAddress.addListener((observable, oldValue, newValue) -> {
-            if (!serverListView.selectServer(new Server("", newValue, serverPort.get()))){
+            if (!serverListView.selectServer(new Server("", newValue, serverPort.get(), serverType.get()))){
                 serverListView.deselect();
             }
         });
         serverPort.addListener((observable, oldValue, newValue) -> {
-            if (!serverListView.selectServer(new Server("", serverAddress.get(), newValue.intValue()))){
+            if (!serverListView.selectServer(new Server("", serverAddress.get(), newValue.intValue(), serverType.get()))){
+                serverListView.deselect();
+            }
+        });
+        serverType.addListener((observable, oldValue, newValue) -> {
+            if (!serverListView.selectServer(new Server("", serverAddress.get(), serverPort.get(), newValue.intValue()))){
                 serverListView.deselect();
             }
         });

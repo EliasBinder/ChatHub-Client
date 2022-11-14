@@ -30,7 +30,7 @@ public class ServerFinder {
                             );
                             if (!exists) {
                                 serviceInfos.add(info);
-                                Server server = new Server(info.getName(), info.getHostAddresses()[0], info.getPort());
+                                Server server = new Server(info.getName(), info.getHostAddresses()[0], info.getPort(), info.getPropertyString("type") != null ? Integer.parseInt(info.getPropertyString("type")) : 1);
                                 Platform.runLater(() -> serverAddedListener.onServerAdded(server));
                             }
                         }
@@ -41,7 +41,7 @@ public class ServerFinder {
                             );
                             if (!exists){
                                 serviceInfos.remove(info);
-                                Server server = new Server(info.getName(), info.getHostAddresses()[0], info.getPort());
+                                Server server = new Server(info.getName(), info.getHostAddresses()[0], info.getPort(), info.getPropertyString("type") != null ? Integer.parseInt(info.getPropertyString("type")) : 1);
                                 Platform.runLater(() -> serverRemovedListener.onServerRemoved(server));
                             }
                         }
