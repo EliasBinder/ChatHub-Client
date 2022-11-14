@@ -1,7 +1,6 @@
 package it.eliasandandrea.chathub.client.model;
 
 import it.eliasandandrea.chathub.client.model.protocol.ServerEventCallback;
-import it.eliasandandrea.chathub.shared.crypto.CryptManager;
 import it.eliasandandrea.chathub.shared.protocol.ClientEvent;
 
 import java.security.PublicKey;
