@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.client.model.protocol;
 
+import it.eliasandandrea.chathub.client.model.GenericClient;
 import it.eliasandandrea.chathub.client.model.persistence.Persistence;
 import it.eliasandandrea.chathub.client.model.TCPClient;
 import it.eliasandandrea.chathub.shared.crypto.CryptManager;
@@ -25,7 +26,7 @@ public class ServerEventCallbackRouter implements ServerEventCallback{
     }
 
     @Override
-    public void onServerEvent(TCPClient client, ServerEvent event){
+    public void onServerEvent(GenericClient client, ServerEvent event){
         if (event == null) {
             return;
         }

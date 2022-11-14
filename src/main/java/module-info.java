@@ -13,6 +13,7 @@ module it.eliasandandrea.chathub {
     requires java.sql;
     requires javafaker;
     requires ChatHub.Shared;
+    requires java.rmi;
 
     opens it.eliasandandrea.chathub.client to javafx.fxml;
     exports it.eliasandandrea.chathub.client;
