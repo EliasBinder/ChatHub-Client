@@ -1,5 +1,6 @@
 package it.eliasandandrea.chathub.client.model.persistence;
 
+import it.eliasandandrea.chathub.client.model.GenericClient;
 import it.eliasandandrea.chathub.client.model.TCPClient;
 import it.eliasandandrea.chathub.client.model.protocol.ServerEventCallbackRouter;
 import it.eliasandandrea.chathub.shared.model.ChatEntity;
@@ -17,7 +18,7 @@ public class Persistence {
     }
 
     //Vars
-    public TCPClient client;
+    public GenericClient client;
     public String myUUID;
     public String username;
     public LinkedList<ChatEntity> chats = new LinkedList<>();

@@ -18,22 +18,19 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.concurrent.Executors;
 
-public class TCPClient {
+public class TCPClient extends GenericClient{
 
-    ServerEventCallback onServerEvent;
     private Socket socket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private CryptManager cryptManager;
-    public PublicKey serverPublicKey;
 
     public TCPClient(String host, int port, CryptManager cryptManager,
                      Runnable onConnectionFail, Runnable onConnectionInterrupted,
                      ServerEventCallback onMessage) {
-        this.onServerEvent = onMessage;
+        super(onMessage);
         this.cryptManager = cryptManager;
 
         Executors.newSingleThreadExecutor().submit(() -> {
@@ -76,10 +73,7 @@ public class TCPClient {
         });
     }
 
-    public void setOnServerEventCallback(ServerEventCallback serverEventCallback) {
-        this.onServerEvent = serverEventCallback;
-    }
-
+    @Override
     public void sendEvent(ClientEvent event) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         EncryptedObjectPacket toSend = CryptManager.encrypt(event, serverPublicKey);
         if (outputStream != null)
